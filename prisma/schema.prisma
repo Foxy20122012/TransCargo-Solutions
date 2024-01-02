@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Permisos {
+  id          Int     @id @default(autoincrement())
+  modulo      String? @db.VarChar(100)
+  rol_id      Int?
+  descripcion String? @db.Text
+  Roles       Roles?  @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_Permisos_Roles")
+
+  @@index([rol_id], map: "rol_id")
+}
+
+model Roles {
+  id          Int        @id @default(autoincrement())
+  nombre_rol  String?    @db.VarChar(50)
+  descripcion String?    @db.Text
+  Permisos    Permisos[]
+  Usuarios    Usuarios[]
+}
+
+model Usuarios {
+  id                 Int     @id @default(autoincrement())
+  nombre_usuario     String? @db.VarChar(50)
+  contrasena         String? @db.VarChar(255)
+  nombre_completo    String? @db.VarChar(255)
+  correo_electronico String? @db.VarChar(100)
+  rol_id             Int?
+  Roles              Roles?  @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_Usuarios_Roles")
+
+  @@index([rol_id], map: "rol_id")
+}
+
+model product {
+  id          Int      @id @default(autoincrement()) @db.UnsignedInt
+  name        String   @db.VarChar(200)
+  description String?  @db.VarChar(200)
+  image       String?  @db.VarChar(200)
+  price       String?  @db.VarChar(50)
+  createdAt   DateTime @default(now()) @db.Timestamp(0)
+}
+
+model Clientes {
+  id                 Int       @id @default(autoincrement())
+  nombre             String?   @db.VarChar(255)
+  direccion          String?   @db.VarChar(255)
+  telefono           String?   @db.VarChar(15)
+  correo_electronico String?   @db.VarChar(100)
+  fecha_registro     DateTime? @db.Date
+  historial_compras  String?   @db.Text
+}
+
+model Note {
+  id        Int       @id @default(autoincrement())
+  title     String?   @db.VarChar(255)
+  content   String?   @db.Text
+  createdAt DateTime? @default(now()) @db.DateTime(0)
+  updatedAt DateTime? @db.DateTime(0)
+}
+
+model Pedidos {
+  id              Int       @id @default(autoincrement())
+  cliente_id      Int?
+  fecha_pedido    DateTime? @db.Date
+  fecha_entrega   DateTime? @db.Date
+  estado_pedido   String?   @db.VarChar(50)
+  detalles_pedido String?   @db.Text
+}
+
+model ProductosTerminados {
+  id                 Int       @id @default(autoincrement())
+  nombre             String?   @db.VarChar(255)
+  tipo_dulce         String?   @db.VarChar(100)
+  cantidad_producida Int?
+  fecha_produccion   DateTime? @db.Date
+  precio_venta       Decimal?  @db.Decimal(10, 2)
+  descripcion        String?   @db.Text
+}
+
+model Ventas {
+  id            Int       @id @default(autoincrement())
+  cliente_id    Int?
+  monto_total   Decimal?  @db.Decimal(10, 2)
+  fecha_venta   DateTime? @db.Date
+  metodo_pago   String?   @db.VarChar(100)
+  estado_pedido String?   @db.VarChar(50)
+  descripcion   String?   @db.Text
+}
+
+model reporte_viaje {
+  id                 Int      @id @default(autoincrement())
+  piloto_asignado    String   @db.VarChar(255)
+  unidad_asignada    String   @db.VarChar(50)
+  hora_salida        DateTime @db.Time(0)
+  hora_llegada       DateTime @db.Time(0)
+  punto_salida       String   @db.VarChar(255)
+  odometro_salida    Float    @db.Float
+  fecha              DateTime @db.Date
+  folio_interno      String   @db.VarChar(100)
+  destino            String   @db.VarChar(255)
+  odometro_llegada   Float    @db.Float
+  kilometros_ida     Float    @db.Float
+  kilometros_llegada Float    @db.Float
+  descarga_pagada    Boolean
+  valor_viaje        Decimal  @db.Decimal(10, 2)
+  factura            String?  @db.VarChar(150)
+}
