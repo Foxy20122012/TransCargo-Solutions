@@ -7,11 +7,11 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
 import { LuFiles } from 'react-icons/lu'
-import { HiOutlineUserGroup } from 'react-icons/hi'
+import { HiOutlineUserGroup, HiOutlineClipboardCheck  } from 'react-icons/hi'
 import { BsBoxSeam, BsFileEarmarkSpreadsheet } from 'react-icons/bs'
 import { IoIosArrowForward } from 'react-icons/io'
-import { GiPayMoney, GiMoneyStack, GiTakeMyMoney } from 'react-icons/gi'
-import { FiBox, FiArrowLeft } from 'react-icons/fi'
+import { GiPayMoney,GiAbstract070 } from 'react-icons/gi'
+import { FiBox, FiArrowLeft, FiPocket  } from 'react-icons/fi'
 import { PiNotePencilFill, PiTruckDuotone  } from 'react-icons/pi'
 import { LiaMoneyBillSolid } from 'react-icons/lia'
 import { BiMoney } from 'react-icons/bi'
@@ -35,7 +35,17 @@ const Sidebar = () => {
   }
 
   const sidebarItems = [
- {
+    {
+      text: 'dashboard',
+      link: '/',
+      icon: <FiPocket   className="m-3 text-xl font-bold" />
+    },
+    {
+      text: 'Pilotos',
+      link: '/pilotos',
+      icon: <HiOutlineClipboardCheck  className="m-3 text-xl font-bold" />
+    },
+    {
       text: 'Reportes de Viajes',
       link: '/home',
       icon: <LuFiles className="m-3 text-xl font-bold" />

@@ -1,53 +1,101 @@
-'use client'
-import Colors from './themeApp/page'
-import router from 'next/router'
-import BtnAppBar from '../components/appBar';
+import React from "react";
+import BtnAppBar from "../components/appBar";
 
-export default function Home () {
+const Dashboard = () => {
   return (
-    <div>
-      < BtnAppBar />
-    <main className="flex flex-col items-center justify-between bg-gray-100 p-4 sm:p-8 md:p-16 lg:p-24 xl:p-32">
-      <h1 className="mb-3 text-center text-4xl font-bold text-blue-600 md:text-5xl">Bienvenido al proyecto ChocoChapin ERP</h1>
-      <p className="mb-5 text-base md:text-lg">Este proyecto consta de varios módulos, a continuación se presenta una descripción de cada uno y los encargados de su desarrollo:</p>
-
-      <div className="mb-5 flex flex-wrap justify-center">
-        <div className="m-2 w-56 rounded-lg bg-blue-100 p-4 shadow-md md:w-64" onClick={() => { router.push('/borrar1') }}>
-          <h2 className="mb-1 text-lg font-semibold text-blue-600 md:text-xl">Módulo 1: Gestión de inventario</h2>
-          <p className="text-sm md:text-base">Encargado: Mario Arita - <code>@dev_ja</code></p>
+    <div className="mt-10">
+      <BtnAppBar />
+      <div className="bg-gray-50 min-h-screen p-8 font-sans">
+        {/* Barra de Navegación */}
+        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-8 mb-16 rounded-lg shadow-2xl">
+          <h1 className="text-5xl font-extrabold">Dashboard de Transporte</h1>
+          <p className="text-xl mt-4 opacity-90">
+            Control avanzado para operaciones de transporte
+          </p>
         </div>
 
-        <div className="m-2 w-56 rounded-lg bg-green-100 p-4 shadow-md md:w-64">
-          <h2 className="mb-1 text-lg font-semibold text-green-600 md:text-xl">Módulo 2: Gestión de ventas</h2>
-          <p className="text-sm md:text-base">Encargado: Nery Lopez - <code>@dev_nl</code></p>
+        {/* Sección de Resumen */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-16">
+          <div className="bg-white p-12 rounded-lg shadow-2xl transform hover:scale-105 transition-transform duration-500">
+            <h2 className="text-4xl font-semibold mb-8">Resumen General</h2>
+            <div className="grid grid-cols-2 gap-12">
+              <div>
+                <p className="text-xl text-gray-700">Vehículos disponibles</p>
+                <p className="text-6xl font-bold text-purple-600">50</p>
+              </div>
+              <div>
+                <p className="text-xl text-gray-700">Rutas programadas</p>
+                <p className="text-6xl font-bold text-purple-600">30</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Gestión de Vehículos */}
+          <div className="bg-white p-12 rounded-lg shadow-2xl transform hover:scale-105 transition-transform duration-500">
+            <h2 className="text-4xl font-semibold mb-8">
+              Gestión de Vehículos
+            </h2>
+            <ul className="list-disc list-inside">
+              <li className="text-purple-600 text-2xl mb-6">
+                Vehículo 1: Activo
+              </li>
+              <li className="text-purple-600 text-2xl mb-6">
+                Vehículo 2: Inactivo
+              </li>
+            </ul>
+          </div>
+
+          {/* Seguimiento de Rutas */}
+          <div className="bg-white p-12 rounded-lg shadow-2xl transform hover:scale-105 transition-transform duration-500">
+            <h2 className="text-4xl font-semibold mb-8">
+              Seguimiento de Rutas
+            </h2>
+            <div className="mb-8">
+              <p className="text-xl text-gray-700">Ruta 1</p>
+              <p className="text-purple-600 text-2xl">En curso</p>
+            </div>
+            <div>
+              <p className="text-xl text-gray-700">Ruta 2</p>
+              <p className="text-green-600 text-2xl">Finalizada</p>
+            </div>
+          </div>
         </div>
 
-        <div className="m-2 w-56 rounded-lg bg-yellow-100 p-4 shadow-md md:w-64">
-          <h2 className="mb-1 text-lg font-semibold text-yellow-600 md:text-xl">Módulo 3: Gestión de clientes</h2>
-          <p className="text-sm md:text-base">Encargado: Heidy Chu - <code>@dev_hc</code></p>
+        {/* Sección de Conductores */}
+        <div className="bg-white p-12 rounded-lg shadow-2xl transform hover:scale-105 transition-transform duration-500 mb-16">
+          <h2 className="text-4xl font-semibold mb-8">
+            Gestión de Conductores
+          </h2>
+          <ul className="list-disc list-inside">
+            <li className="text-purple-600 text-2xl mb-6">
+              Conductor 1: Disponible
+            </li>
+            <li className="text-purple-600 text-2xl mb-6">
+              Conductor 2: Ocupado
+            </li>
+          </ul>
         </div>
 
-        <div className="m-2 w-56 rounded-lg bg-red-100 p-4 shadow-md md:w-64">
-          <h2 className="mb-1 text-lg font-semibold text-red-600 md:text-xl">Módulo 4: Gestión financiera</h2>
-          <p className="text-sm md:text-base">Encargado: Miguel Alvarez - <code>@dev_ma</code></p>
+        {/* Sección de Informes */}
+        <div className="bg-white p-12 rounded-lg shadow-2xl transform hover:scale-105 transition-transform duration-500 mb-16">
+          <h2 className="text-4xl font-semibold mb-8">
+            Informes y Estadísticas
+          </h2>
+          <p className="text-xl text-gray-700">
+            Gráficos avanzados y análisis de rendimiento
+          </p>
         </div>
 
-        <div className="m-2 w-56 rounded-lg bg-purple-100 p-4 shadow-md md:w-64">
-          <h2 className="mb-1 text-lg font-semibold text-purple-600 md:text-xl">Módulo 5: Login y Seguridad</h2>
-          <p className="text-sm md:text-base">Encargado: Marvin Martinez - <code>@dev_mm</code></p>
+        {/* Sección de Configuración */}
+        <div className="bg-white p-12 rounded-lg shadow-2xl transform hover:scale-105 transition-transform duration-500 mb-16">
+          <h2 className="text-4xl font-semibold mb-8">Configuración</h2>
+          <p className="text-xl text-gray-700">
+            Personaliza y optimiza tus ajustes
+          </p>
         </div>
       </div>
-
-      <div>
-        <p className='text-center text-sm font-bold md:text-base'>Para mantener un trabajo estético nos estaremos guiando por una paleta de colores para
-          procurar el mismo apartado visual en todos los módulos.</p>
-        <Colors />
-      </div>
-
-      <div className="mt-5 text-center md:mt-10">
-        <p className="text-blue-600">Este es un proyecto orgullosamente guatemalteco para potenciar la industria local.</p>
-      </div>
-    </main>
     </div>
-  )
-}
+  );
+};
+
+export default Dashboard;

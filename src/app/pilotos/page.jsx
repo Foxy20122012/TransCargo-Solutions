@@ -4,30 +4,22 @@
 import dynamic from "next/dynamic";
 import useI18n from '../../hooks/useI18n';
 import useLoading from "../../hooks/useLoading"
-// import useHasMounted from '../../hooks/useHasMounted'
-// import { useState, useEffect } from "react";
 import React, { useEffect, useState } from "react";
-import { Clientes } from "@prisma/client";
 import presets from "../../utils/globalPresets"
-import fetchedHeaders from "../../models/encabezadoModel"
-// import useLoading from "../../hooks/useLoading"
 import useHasMounted from '../../hooks/useHasMounted'
-import environment from "../../utils/environment"
-import { execute } from "../api/helper/clientApi"
-
-// import BtnAppBar from "../../components/appBar"
 import Loading from "../../components/Loading"
-// import DataTable from "vComponents/dist/DataTable"
 import BtnAppBar from '../../components/appBar';
 import DynamicForm from "../../components/DynamicForm";
-import { useClientes } from "../../context/ClientesContext";
-import { clientesColumns } from "../../models/clientesMls";
-import { transformClientesToRows } from "../../models/clientesMls";
-import clienteModel from "../../models/clientes/clienteModel";
-import clientesProps from "../../models/clientesPs";
 import Modals from "../../components/Modals";
 import SuccessModal from "../../components/SuccessModal";
-// import tabContent from "../../models/clientesPs"
+
+import fetchedHeaders from "../../models/empleados/headers"
+import { useEmpleados } from "../../context/EmpleadosContext";
+import { empleadosColumns } from "../../models/empleados/empleadosMls";
+import { transformEmpleadosToRows } from "../../models/empleados/empleadosMls";
+import clienteModel from "../../models/clientes/clienteModel";
+import clientesProps from "../../models/clientesPs";
+
 
 
 // Importa el componente DataTable de forma dinámica
@@ -43,24 +35,24 @@ const VDialog = dynamic(() => { return import("vComponents/dist/VDialog") }, { s
 //   (key) => ({ key, label: clientesColumns[key] })
 // );
 
-const columns = Object.keys(clientesColumns).map((key) => ({
+const columns = Object.keys(empleadosColumns).map((key) => ({
   key,
-  label: clientesColumns[key]
+  label: empleadosColumns[key]
 }));
 
 
 // Define el componente principal
 const ClientesPage = () => {
 
-  const {
-    clientes,
-    createCliente,
-    loadClientes,
-    deleteCliente,
-    selectedCliente,
-    setSelectedCliente,
-    updateCliente,
-  } = useClientes();
+    const {
+        empleados,
+        loadEmpleados,
+        createEmpleado,
+        deleteEmpleado,
+        selectedEmpleado,
+        setSelectedEmpleado,
+        updateEmpleado,
+      } = useEmpleados();
 
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -70,7 +62,7 @@ const ClientesPage = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [isOpen2, setIsOpen2] = useState(false)
   const [yesNoOpen, setYesNoOpen] = useState(false)
-  const rowsClientes = transformClientesToRows(clientes); // Asegúrate de tener definida la función transformClientesToRows y la variable clientes.
+  const rowsEmpleados = transformEmpleadosToRows(empleados); // Asegúrate de tener definida la función transformClientesToRows y la variable clientes.
   const [model, setModel] = useState(clienteModel()) 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -80,7 +72,7 @@ const ClientesPage = () => {
 
 
   useEffect(() => {
-    loadClientes();
+    loadEmpleados();
   }, []);
 
   // Define los estados para las cabeceras y los elementos
@@ -183,10 +175,10 @@ const ClientesPage = () => {
     <BtnAppBar/>
     <div className="mt-20 ml-12">
       <div className="my-2 uppercase font-bold text-base">
-      Clientes
+      Empleados
       </div>
       {/* Pasa las cabeceras y elementos al componente DataTable */}
-      <DataTable headers={headers} items={rowsClientes}  presets={presets} i18n={i18n}
+      <DataTable headers={headers} items={rowsEmpleados}  presets={presets} i18n={i18n}
        onNewItem={handleNewClick}
        onEditItem={handleEditCliente} 
        onDeleteItem={handleDelete}
@@ -206,7 +198,7 @@ const ClientesPage = () => {
             initialFormData={selectedCliente}
             // @ts-ignore
             onUpdateClick={handleUpdateClick} // Pasa la función handleUpdateClick al DynamicForm
-            columns={1}
+            columns={2}
           />
             <div className="flex justify-end mt-4">
     <button

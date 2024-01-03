@@ -30,9 +30,10 @@ const MainLayout = () => {
 
   // Función para manejar el clic en el botón de cerrar sesión
   const handleLogoutClick = () => {
-    // Implementa la lógica para cerrar la sesión del usuario
-    console.log('Clicked on Logout');
+    // Redirige al usuario a la ruta de cierre de sesión
+    window.location.href = '/api/auth/signout';
   };
+  
 
   return (
     <Box sx={{ display: 'flex' }}>
