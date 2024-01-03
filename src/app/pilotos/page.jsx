@@ -17,8 +17,8 @@ import fetchedHeaders from "../../models/empleados/headers"
 import { useEmpleados } from "../../context/EmpleadosContext";
 import { empleadosColumns } from "../../models/empleados/empleadosMls";
 import { transformEmpleadosToRows } from "../../models/empleados/empleadosMls";
-import clienteModel from "../../models/clientes/clienteModel";
-import clientesProps from "../../models/clientesPs";
+// import clienteModel from "../../models/clientes/clienteModel";
+import empleadosProps from "../../models/empleados/empleadosProps";
 
 
 
@@ -63,7 +63,7 @@ const ClientesPage = () => {
   const [isOpen2, setIsOpen2] = useState(false)
   const [yesNoOpen, setYesNoOpen] = useState(false)
   const rowsEmpleados = transformEmpleadosToRows(empleados); // Asegúrate de tener definida la función transformClientesToRows y la variable clientes.
-  const [model, setModel] = useState(clienteModel()) 
+//   const [model, setModel] = useState(clienteModel()) 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleCloseModal = () => {
@@ -83,8 +83,8 @@ const ClientesPage = () => {
   const hasMounted = useHasMounted()
 
 
-  const openDeleteModal = (client) => {
-    setClientToDelete(client);
+  const openDeleteModal = (empleados) => {
+    setClientToDelete(empleados);
     setIsDeleteModalOpen(true);
   };
 
@@ -93,13 +93,13 @@ const ClientesPage = () => {
     setIsDeleteModalOpen(false);
   };
 
-  const handleEditCliente = (client) => {
-    setSelectedCliente(client);
+  const handleEditCliente = (empleados) => {
+    setSelectedEmpleado(empleados);
     setIsFormVisible(true);
   };
 
-  const handleDelete = (cliente) => {
-    openDeleteModal(cliente);
+  const handleDelete = (empleados) => {
+    openDeleteModal(empleados);
   };
   // const deleteItem = (item) => {
   //   setModel(item)
@@ -107,22 +107,22 @@ const ClientesPage = () => {
   // }
 
   const handleNewClick = () => {
-    setSelectedCliente(null);
+    setSelectedEmpleado(null);
     setIsFormVisible(true);
   };
 
   const handleCreateOrUpdateCliente = async (formData) => {
     try {
-      if (selectedCliente) {
+      if (selectedEmpleado) {
         // Estás editando un cliente existente
-        await updateCliente(selectedCliente.id, formData);
+        await updateEmpleado(selectedEmpleado.id, formData);
       } else {
         // Estás creando un nuevo cliente
-        await createCliente(formData);
+        await createEmpleado(formData);
       }
       setIsFormVisible(false);
-      setSelectedCliente(null);
-      loadClientes();
+      setSelectedEmpleado(null);
+      loadEmpleados();
     } catch (error) {
       console.error("Error al crear o actualizar el cliente:", error);
     }
@@ -130,13 +130,13 @@ const ClientesPage = () => {
 
   const handleUpdateClick = async (formData) => {
     try {
-      if (selectedCliente) {
+      if (selectedEmpleado) {
         // Estás editando un cliente existente
-        await updateCliente(selectedCliente.id, formData); // Envía los datos actualizados al servidor
+        await updateEmpleado(selectedEmpleado.id, formData); // Envía los datos actualizados al servidor
       }
       setIsFormVisible(false);
-      setSelectedCliente(null);
-      loadClientes();
+      setSelectedEmpleado(null);
+      loadEmpleados();
     } catch (error) {
       console.error("Error al actualizar el cliente:", error);
     }
@@ -156,10 +156,10 @@ const ClientesPage = () => {
   
   const handleConfirmDelete = async () => {
     try {
-      await deleteCliente(clientToDelete.id); // Suponiendo que el cliente tiene una propiedad 'id'
+      await deleteEmpleado(empleadostoDelete.id); // Suponiendo que el cliente tiene una propiedad 'id'
       setIsDeleteSuccess(true); // Puedes manejar esto según tus necesidades
       setIsDeleteModalOpen(false);
-      loadClientes(); // Vuelve a cargar los clientes después de eliminar uno
+      loadEmpleados(); // Vuelve a cargar los clientes después de eliminar uno
     } catch (error) {
       console.error("Error al eliminar el cliente:", error);
       setIsDeleteSuccess(false); // Opcional: manejar el caso de fallo en la eliminación
@@ -175,7 +175,7 @@ const ClientesPage = () => {
     <BtnAppBar/>
     <div className="mt-20 ml-12">
       <div className="my-2 uppercase font-bold text-base">
-      Empleados
+      Pilotos.
       </div>
       {/* Pasa las cabeceras y elementos al componente DataTable */}
       <DataTable headers={headers} items={rowsEmpleados}  presets={presets} i18n={i18n}
@@ -191,14 +191,14 @@ const ClientesPage = () => {
       className='-translate-x-1/2 bg-black bg-opacity-25'
       >
            <DynamicForm
-            formProps={clientesProps}
+            formProps={empleadosProps}
             onSubmit={handleCreateOrUpdateCliente}
-            showCreateButton={!selectedCliente}
-            showUpdateButton={!!selectedCliente}
-            initialFormData={selectedCliente}
+            showCreateButton={!selectedEmpleado}
+            showUpdateButton={!!selectedEmpleado}
+            initialFormData={selectedEmpleado}
             // @ts-ignore
             onUpdateClick={handleUpdateClick} // Pasa la función handleUpdateClick al DynamicForm
-            columns={2}
+            columns={1}
           />
             <div className="flex justify-end mt-4">
     <button
@@ -213,17 +213,17 @@ const ClientesPage = () => {
         <Modals
           isOpen={isDeleteModalOpen}
           title="Confirmar Eliminación"
-          message={`¿Estás seguro de que deseas eliminar al cliente ${clientToDelete?.nombre}?`}
+          message={`¿Estás seguro de que deseas eliminar al Piloto ${clientToDelete?.nombre}?`}
           onConfirm={async () => {
             try {
-              if (clientToDelete) {
-                await deleteCliente(clientToDelete.id);
+              if (empleadostoDelete) {
+                await deleteEmpleado(empleadostoDelete.id);
                 closeDeleteModal();
                 setIsDeleteSuccess(true);
-                loadClientes();
+                loadEmpleados();
               }
             } catch (error) {
-              console.error("Error al eliminar el cliente:", error);
+              console.error("Error al eliminar el Piloto:", error);
             }
           }}
           onCancel={closeDeleteModal}
