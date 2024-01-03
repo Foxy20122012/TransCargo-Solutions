@@ -156,7 +156,7 @@ const ClientesPage = () => {
   
   const handleConfirmDelete = async () => {
     try {
-      await deleteEmpleado(empleadostoDelete.id); // Suponiendo que el cliente tiene una propiedad 'id'
+      await deleteEmpleado(clientToDelete.id); // Suponiendo que el cliente tiene una propiedad 'id'
       setIsDeleteSuccess(true); // Puedes manejar esto según tus necesidades
       setIsDeleteModalOpen(false);
       loadEmpleados(); // Vuelve a cargar los clientes después de eliminar uno
@@ -216,8 +216,8 @@ const ClientesPage = () => {
           message={`¿Estás seguro de que deseas eliminar al Piloto ${clientToDelete?.nombre}?`}
           onConfirm={async () => {
             try {
-              if (empleadostoDelete) {
-                await deleteEmpleado(empleadostoDelete.id);
+              if (clientToDelete) {
+                await deleteEmpleado(clientToDelete.id);
                 closeDeleteModal();
                 setIsDeleteSuccess(true);
                 loadEmpleados();
