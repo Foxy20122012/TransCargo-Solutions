@@ -26,7 +26,6 @@ interface DynamicFormProps {
   showCreateButton: boolean;
   showUpdateButton: boolean;
   initialFormData?: any;
-  isOpen?: boolean;
   onUpdateClick?: () => void;
   onCancelClick?: () => void;
   columns?: number;
@@ -73,6 +72,15 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   const handleCreateClick = () => {
     if (formRef.current) {
       formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+    }
+  };
+
+  const handleUpdateClick = () => {
+    if (onUpdateClick) {
+      onUpdateClick();
+      if (formRef.current) {
+        formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+      }
     }
   };
 
@@ -133,7 +141,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
           <button
             className="bg-green-500 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline"
             type="button"
-            onClick={onUpdateClick}
+            onClick={handleUpdateClick}
           >
             Actualizar <LuPen className="inline ml-2 text-xl font-bold text-white" />
           </button>
