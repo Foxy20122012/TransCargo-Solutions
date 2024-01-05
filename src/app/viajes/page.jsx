@@ -1,0 +1,343 @@
+"use client";
+import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import { toast } from "react-toastify";
+import { findIndex } from "underscore";
+import { execute } from "../../helper/clientApi";
+import useI18n from "../../hooks/useI18n";
+import axios from 'axios';
+// import useLoading from "../hooks/useLoading"
+// import useHasMounted from '../hooks/useHasMounted'
+import presets from "../../utils/globalPresets";
+import environment from "../../utils/environment";
+import i18nProps from "../../models/i18nProps";
+import i18nModel from "../../models/i18nModel";
+
+const DataTable = dynamic(
+  () => {
+    return import("vComponents/dist/DataTable");
+  },
+  { ssr: false }
+);
+const DataForm = dynamic(
+  () => {
+    return import("vComponents/dist/DataForm");
+  },
+  { ssr: false }
+);
+const VDialog = dynamic(
+  () => {
+    return import("vComponents/dist/VDialog");
+  },
+  { ssr: false }
+);
+const YesNoQuestion = dynamic(
+  () => {
+    return import("vComponents/dist/YesNoQuestion");
+  },
+  { ssr: false }
+);
+/**
+ *
+ * @brief Mantenimiento de la tabla i18n para las etiquetas en las pantallas
+ */
+const Viajes = () => {
+  const i18n = useI18n();
+  // const loading = useLoading()
+  // const hasMounted = useHasMounted()
+
+  const [headers, setHeaders] = useState(i18nProps()); // {valiable con las propiedades de los campos}
+  const [items, setItems] = useState([]);
+  const [token, setToken] = useState("");
+  const [isEdit, setIsEdit] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen2, setIsOpen2] = useState(false);
+  const [yesNoOpen, setYesNoOpen] = useState(false);
+  const [model, setModel] = useState(i18nModel()); // {variable con los campos que mapean los datos en la tabla}
+  const sprSelect = "SPR_I18N_S";
+  const sprInsert = "SPR_I18N_I";
+  const sprUpdate = "SPR_I18N_U";
+  const sprDelete = "SPR_I18N_D";
+  const sprListasValores = "SPR_LISTA_VALORES_S";
+  const sprListasValoresConParametros = "SPR_CATALOGOS_ENTIDAD";
+  const formName = "frmI18n";
+
+  
+
+  useEffect(() => {
+    // Aquí asumimos que obtienes el token de alguna forma, puede ser desde un hook o localStorage.
+
+      listar();
+  
+  }, []);
+
+  const listar = async () => {
+    try {
+      // Eliminamos la referencia al token
+      const response = await axios.post(environment.apiUrl, { procedure: sprSelect, params: [] });
+      if (response.data.success) {
+        setItems(response.data.data);
+      } else {
+        toast.error("Error al obtener datos");
+      }
+    } catch (error) {
+      toast.error("Error de conexión al servidor");
+    }
+  };
+
+  const saveItem = async (modelSave, saveNew = false) => {
+    const procedure = isEdit ? "SPR_I18N_U" : "SPR_I18N_I";
+    try {
+      const response = await axios.post(environment.apiUrl, { procedure, params: [token, modelSave.lenguaje, modelSave.id_mensaje, modelSave.mensaje, modelSave.id_mensaje_padre] });
+      if (response.data.success) {
+        listar();
+        setIsOpen(false);
+        if (saveNew) {
+          newItem(1);
+        }
+      } else {
+        toast.error("Error al guardar");
+      }
+    } catch (error) {
+      toast.error("Error de conexión al servidor");
+    }
+  };
+
+  const deleteItem = async (item) => {
+    const procedure = "SPR_I18N_D";
+    try {
+      const response = await axios.post(environment.apiUrl, { procedure, params: [token, item.lenguaje, item.id_mensaje] });
+      if (response.data.success) {
+        listar();
+      } else {
+        toast.error("Error al eliminar");
+      }
+    } catch (error) {
+      toast.error("Error de conexión al servidor");
+    }
+  };
+
+  const newItem = (DFDialogTurn = 0) => {
+    setIsEdit(false);
+    setModel(i18nModel());
+    if (DFDialogTurn === 0) {
+      setIsOpen(true);
+    } else {
+      setIsOpen2(true);
+    }
+  };
+
+  const editItem = (item) => {
+    setIsEdit(true);
+    setModel(item);
+    setIsOpen(true);
+  };
+
+  const cancelDeleteItem = () => {
+    setModel(i18nModel());
+    setYesNoOpen(false);
+  };
+
+
+  const doDeleteItem = async (item) => {
+    // loading.start()
+    const resultado = await execute(sprDelete, [
+      token,
+      item.lenguaje,
+      item.id_mensaje,
+    ]);
+    // loading.stop()
+    setYesNoOpen(false);
+    if (environment.validaResultadoDB(resultado, i18n, toast, true) === true) {
+      listar(token);
+    }
+  };
+
+
+
+  /**
+   * @brief obtiene todas las listas de valores a utilizar en la pantalla desde Base de Datos
+   */
+  const listarCatalogos = async () => {
+    const newHeaders = [];
+    for (const hds of headers) {
+      if (hds.listName && hds.listName.length > 0) {
+        const lov = await execute(sprListasValores, [hds.listName]);
+        if (environment.validaResultadoDB(lov, i18n, toast) === true) {
+          hds.list = lov;
+        }
+      }
+      newHeaders.push(hds);
+    }
+    setHeaders(newHeaders);
+  };
+
+  /**
+   * @brief obtiene todas las listas de valores por compañía o parametros adicionales a utilizar en la pantalla desde Base de Datos
+   */
+  const listarCatalogosParametros = async (token) => {
+    const newHeaders = [];
+    for (const hds of headers) {
+      if (hds.listNameParams && hds.listNameParams.length > 0) {
+        let params = [];
+        if (
+          hds.fixedListParams &&
+          Array.isArray(hds.fixedListParams) &&
+          hds.fixedListParams.length === 3
+        ) {
+          params = [token, hds.listNameParams, ...hds.fixedListParams];
+        } else {
+          params = [token, hds.listNameParams, null, null, null];
+        }
+        const lov = await execute(sprListasValoresConParametros, params);
+        if (environment.validaResultadoDB(lov, i18n, toast) === true) {
+          hds.list = lov;
+        }
+      }
+      newHeaders.push(hds);
+    }
+    setHeaders(newHeaders);
+  };
+
+  /**
+   *
+   * @brief traduce las etiquetas según el lenguaje seleccionaao
+   * @brief cambiando el valor de las variables headers
+   */
+  const i18nHeaders = () => {
+    return new Promise((resolve) => {
+      const newHeaders = [];
+      for (const hds of headers) {
+        if (hds.i18n && hds.i18n.length > 0) {
+          hds.text = i18n.t(hds.i18n);
+        }
+        if (hds.pristineMessages) {
+          Object.keys(hds.pristineMessages).forEach((msg) => {
+            if (msg.includes("-params") === false) {
+              if (hds.pristineMessages[`${msg}-params`]) {
+                hds.inputProps[`data-pristine-${msg}-message`] = i18n.t(
+                  hds.pristineMessages[msg],
+                  hds.pristineMessages[`${msg}-params`]
+                );
+              } else {
+                hds.inputProps[`data-pristine-${msg}-message`] = i18n.t(
+                  hds.pristineMessages[msg]
+                );
+              }
+            }
+          });
+        }
+        newHeaders.push(hds);
+      }
+      resolve(newHeaders);
+    });
+  };
+
+  const translateHeaders = async () => {
+    const newHeaders = await i18nHeaders();
+    setHeaders(newHeaders);
+  };
+
+  const onChangeLenguaje = async (val, item) => {
+    const newHeaders = headers.slice();
+    const idxPadre = findIndex(newHeaders, { value: "id_mensaje_padre" });
+    newHeaders[idxPadre].fixedListParams = [val, null, null];
+    setHeaders(newHeaders);
+    const env = await environment.getEnvUser();
+    listarCatalogosParametros(env.token);
+  };
+
+  /**
+   * @brief obtiene el token guardado en las cookies del navegador y los datos almacenados en localStorage de la aplicacion
+   * @brief inicializa los catalogos y listados
+   * @returns si no esta el token redirige a la pantalla de login
+   */
+  const getEnv = async () => {
+    // Eliminamos la lógica relacionada con la validación de sesión.
+    // Por ejemplo, si anteriormente redirigías si no había sesión activa, elimina ese código.
+    setToken(""); // Puedes eliminar esto o mantenerlo según lo que necesites.
+    listar(""); // Puedes pasar un token vacío o incluso eliminarlo si ya no lo necesitas.
+    listarCatalogos();
+    listarCatalogosParametros("");
+    await translateHeaders();
+    const newHeaders = headers.slice();
+    const idxLenguaje = findIndex(newHeaders, { value: "lenguaje" });
+    newHeaders[idxLenguaje].onChange = onChangeLenguaje;
+    setHeaders(newHeaders);
+  };
+
+  /**
+   * @brief inicializa los datos de ambiente y el listado desde base de datos
+   */
+  // when page is mounted
+  useEffect(() => {
+    getEnv();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <>
+      <div>
+        <DataTable
+          i18n={i18n}
+          headers={headers}
+          items={items}
+          onNewItem={newItem}
+          onEditItem={editItem}
+          onDeleteItem={deleteItem}
+          presets={presets}
+        />
+        {isOpen && isOpen === true && (
+          <VDialog
+            isOpen={isOpen}
+            size="sm"
+            className="-translate-x-1/2 bg-black bg-opacity-25"
+          >
+            <DataForm
+              headers={headers}
+              model={model}
+              i18n={i18n}
+              presets={presets}
+              name={formName}
+              isEdit={isEdit}
+              onSave={(newModel, saveNew) => saveItem(newModel, saveNew)}
+              onCancel={() => setIsOpen(false)}
+            />
+          </VDialog>
+        )}
+
+        {isOpen2 && isOpen2 === true && (
+          <VDialog
+            isOpen={isOpen2}
+            size="sm"
+            className="-translate-x-1/2 bg-black bg-opacity-25"
+          >
+            <DataForm
+              headers={headers}
+              model={model}
+              i18n={i18n}
+              presets={presets}
+              name={formName}
+              isEdit={isEdit}
+              onSave={(newModel, saveNew) => saveItem(newModel, saveNew)}
+              onCancel={() => setIsOpen2(false)}
+            />
+          </VDialog>
+        )}
+        {yesNoOpen === true && (
+          <YesNoQuestion
+            title={i18n.t("common.deleteRow")}
+            message={i18n.t("common.deleteConfirm", {
+              label: model.descripcion,
+            })}
+            onYes={() => doDeleteItem(model)}
+            onNo={() => cancelDeleteItem()}
+          />
+        )}
+      </div>
+    </>
+  );
+};
+
+export default Viajes;

@@ -9,3 +9,4 @@ export const conn = mysql({
         database: 'u930882479_novaStudio'
     }
 })
+

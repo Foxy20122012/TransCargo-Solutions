@@ -28,13 +28,13 @@ const Modals: FC<ModalProps> = ({
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="fixed inset-0 bg-black opacity-50"></div>
-      <div className="bg-white w-1/3 p-4 rounded-lg shadow-lg z-50">
-        <h2 className="text-xl font-semibold mb-4">{title}</h2>
-        <div className="mb-4">{children}</div>
-        <div className="flex justify-end">
+      <div className="bg-white w-full md:w-1/2 lg:w-1/3 p-8 md:p-10 rounded-xl shadow-xl z-50 max-w-md">
+        <h2 className="text-3xl font-semibold mb-8 text-center text-gray-800">{title}</h2>
+        <div className="mb-8 text-gray-700">{children}</div>
+        <div className="flex justify-center md:justify-end space-x-4">
           {showCancelButton && (
             <button
-              className="px-4 py-2 mr-2 bg-red-500 hover:bg-red-600 text-white rounded-md"
+              className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md"
               onClick={onCancel}
             >
               Cancelar
@@ -42,7 +42,7 @@ const Modals: FC<ModalProps> = ({
           )}
           {showUpdateButton && (
             <button
-              className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md mx-2"
+              className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
               onClick={onUpdate}
             >
               Actualizar
@@ -50,7 +50,7 @@ const Modals: FC<ModalProps> = ({
           )}
           {showConfirmButton && (
             <button
-              className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md"
+              className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md"
               onClick={onConfirm}
             >
               Confirmar

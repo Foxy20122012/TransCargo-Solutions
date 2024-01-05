@@ -31,5 +31,6 @@
 @import 'component-styles/sidebar.css';
 @import 'component-styles/navbar.css';
 @import 'component-styles/datatable.css';
+@import 'page-styles/common.css';
 @import 'page-styles/login.css';
 @import 'page-styles/eventos_colores.css';

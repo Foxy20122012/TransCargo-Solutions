@@ -30,6 +30,8 @@ const Modal = dynamic(() => { return import("vComponents/dist/Modal") }, { ssr: 
 const DataForm = dynamic(() => { return import("vComponents/dist/DataForm") }, { ssr: false })
 const VDialog = dynamic(() => { return import("vComponents/dist/VDialog") }, { ssr: false })
 // const VistaConsulta = dynamic(() => { return import("vComponents/dist/VistaConsulta") }, { ssr: false })
+// const PdfViewer = dynamic(() => { return import("vComponents/dist/PdfViewer") }, { ssr: false })
+// const VistaConsulta = dynamic(() => { return import("vComponents/dist/VistaConsulta") }, { ssr: false })
 
 // const columns = (Object.keys(clientesColumns) as (keyof Clientes)[]).map(
 //   (key) => ({ key, label: clientesColumns[key] })
@@ -175,7 +177,7 @@ const ClientesPage = () => {
     <BtnAppBar/>
     <div className="mt-20 ml-12">
       <div className="my-2 uppercase font-bold text-base">
-      Pilotos.
+      Planillla De Empleados.
       </div>
       {/* Pasa las cabeceras y elementos al componente DataTable */}
       <DataTable headers={headers} items={rowsEmpleados}  presets={presets} i18n={i18n}
@@ -200,6 +202,16 @@ const ClientesPage = () => {
             onUpdateClick={handleUpdateClick} // Pasa la función handleUpdateClick al DynamicForm
             columns={1}
           />
+            {/* <DataForm
+              headers={headers}
+              model={headers}
+              i18n={i18n}
+              presets={presets}
+              // name={formName}
+              isEdit={""}
+              onSave={""}
+              onCancel={() => setIsFormVisible(false)}
+            /> */}
             <div className="flex justify-end mt-4">
     <button
       onClick={() => setIsFormVisible(false)} // Cierra el modal o dialogo

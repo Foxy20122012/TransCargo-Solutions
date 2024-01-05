@@ -1,7 +1,7 @@
 import { createContext, useState, useRef, useEffect } from 'react'
 import rosetta from 'rosetta'
 // import rosetta from 'rosetta/debug'
-import { execute } from '../app/api/helper/clientApi'
+import { execute } from '../helper/clientApi'
 import useHasMounted from '../hooks/useHasMounted'
 
 const i18n = rosetta()

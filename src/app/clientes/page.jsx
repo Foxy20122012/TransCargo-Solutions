@@ -13,7 +13,7 @@ import fetchedHeaders from "../../models/encabezadoModel"
 // import useLoading from "../../hooks/useLoading"
 import useHasMounted from '../../hooks/useHasMounted'
 import environment from "../../utils/environment"
-import { execute } from "../api/helper/clientApi"
+import { execute } from "../../helper/clientApi"
 
 // import BtnAppBar from "../../components/appBar"
 import Loading from "../../components/Loading"

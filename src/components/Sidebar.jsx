@@ -16,6 +16,7 @@ import { PiNotePencilFill, PiTruckDuotone  } from 'react-icons/pi'
 import { LiaMoneyBillSolid } from 'react-icons/lia'
 import { BiMoney } from 'react-icons/bi'
 import Collapse from '@mui/material/Collapse'
+import Hidden from '@mui/material/Hidden'; 
 
 const Sidebar = () => {
   const [inventoryOpen, setInventoryOpen] = useState(false) // Estado para controlar la apertura del submenú
@@ -41,13 +42,8 @@ const Sidebar = () => {
       icon: <FiPocket   className="m-3 text-xl font-bold" />
     },
     {
-      text: 'Pilotos',
-      link: '/pilotos',
-      icon: <HiOutlineClipboardCheck  className="m-3 text-xl font-bold" />
-    },
-    {
       text: 'Reportes de Viajes',
-      link: '/home',
+      link: '/viajes',
       icon: <LuFiles className="m-3 text-xl font-bold" />
     },
     {
@@ -55,41 +51,36 @@ const Sidebar = () => {
       link: '/products',
       icon: <PiTruckDuotone  className="m-3 text-xl font-bold" />
     },
-    // {
-    //   text: 'Productos',
-    //   link: '/home',
-    //   icon: <LuFiles className="m-3 text-xl font-bold" />
-    // },
     {
       text: 'Pendientes',
       link: '/nota',
       icon: <PiNotePencilFill className="m-3 text-xl font-bold" />
     },
-    // {
-    //   text: 'Inventario',
-    //   icon: <BsBoxSeam className="m-3 text-xl font-bold" />,
-    //   onClick: handleInventoryClick
-    // },
     {
       text: 'Clientes',
       link: '/clientes',
       icon: <HiOutlineUserGroup className="m-3 text-xl font-bold" />
     },
-    // {
-    //   text: 'Ventas',
-    //   icon: <GiMoneyStack className="m-3 text-xl font-bold" />,
-    //   onClick: handleVentasClick
-    // },
     {
       text: 'Planilla',
       link: '/planilla',
       icon: <BsFileEarmarkSpreadsheet className="m-3 text-xl font-bold" />
     },
-    // {
-    //   text: 'Finanzas',
-    //   icon: <LiaMoneyBillSolid className="m-3 text-xl font-bold" />,
-    //   onClick: handleFinanzasClick
-    // },
+    {
+      text: 'Documentacion',
+      link: '/documentacion',
+      icon: <HiOutlineClipboardCheck  className="m-3 text-xl font-bold" />
+    },
+    {
+      text: 'Modulo 1',
+      link: '/modu',
+      icon: <HiOutlineClipboardCheck  className="m-3 text-xl font-bold" />
+    },
+    {
+      text: 'Presentacion',
+      link: '/present',
+      icon: <HiOutlineClipboardCheck  className="m-3 text-xl font-bold" />
+    },
     {
       text: 'Cerrar Sesión',
       link: '/api/auth/signout',
@@ -98,112 +89,40 @@ const Sidebar = () => {
   ]
 
   return (
-    <div className="fixed left-0 top-0 z-10 flex h-screen w-60 flex-col items-center bg-white py-6 shadow-md">
-      <Typography
-        variant="h6"
-        sx={{
-          mt: '1rem',
-          mb: '2rem',
-          fontWeight: 'bold',
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          maxWidth: '80%'
-        }}
-      />
-      <List sx={{ width: '100%' }}>
-        {sidebarItems.map((item) => (
-          <div key={item.text}>
-            <ListItem disablePadding>
-              <ListItemButton
-                component="a"
-                href={item.link}
-                onClick={item.onClick}
-              >
-                {item.icon}
-                <ListItemText
-                  primary={item.text}
-                  sx={{
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    maxWidth: '100%'
-                  }}
-                />
-              </ListItemButton>
-            </ListItem>
-            {/* Renderizar el submenú si el botón de Inventario se ha hecho clic */}
-            {item.text === 'Inventario' && (
-              <Collapse in={inventoryOpen}>
-                {/* Agrega tus opciones de submenú aquí */}
-                <List>
-                  <ListItem disablePadding>
-                    <ListItemButton component="a" href="/materiasPrimas">
-                      <BsBoxSeam className="m-3 text-xl font-bold" />
-                      Materias Primas
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton component="a" href="/salidasMateriasPrimas">
-                      <IoIosArrowForward className="m-3 text-xl font-bold" />
-                      Entradas y Salidas de Materia Prima
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton component="a" href="/productosTerminados">
-                      <FiBox className="m-3 text-xl font-bold" />
-                      Productos Terminados
-                    </ListItemButton>
-                  </ListItem>
-                  {/* Puedes agregar más opciones de submenú según sea necesario */}
-                </List>
-              </Collapse>
-            )}
+    <div>
+      {/* Sidebar para pantallas más grandes */}
+      <Hidden mdDown>
+        <div className="fixed left-0 top-0 z-10 flex h-screen w-60 flex-col items-center bg-white py-6 shadow-md">
+          <Typography variant="h6">Sidebar Title</Typography>
+          <List sx={{ width: '100%' }}>
+            {sidebarItems.map((item) => (
+              <ListItem key={item.text} disablePadding>
+                <ListItemButton component="a" href={item.link}>
+                  {item.icon}
+                  <ListItemText primary={item.text} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </div>
+      </Hidden>
 
-            {item.text === 'Finanzas' && (
-              <Collapse in={finanzasOpen}>
-                {/* Agrega tus opciones de submenú aquí */}
-                <List>
-                  <ListItem disablePadding>
-                    <ListItemButton component="a" href="/costosProduccion">
-                      <BiMoney className="m-3 text-xl font-bold" />
-                      Costos Producción
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton component="a" href="/cuentasBancarias">
-                      <BiMoney className="m-3 text-xl font-bold" />
-                      Cuentas Bancarias
-                    </ListItemButton>
-                  </ListItem>
-                  {/* Puedes agregar más opciones de submenú según sea necesario */}
-                </List>
-              </Collapse>
-            )}
-            {/* Renderizar el submenú de Ventas si el botón de Ventas se ha hecho clic */}
-            {item.text === 'Ventas' && (
-              <Collapse in={ventasOpen}>
-                {/* Agrega tus opciones de submenú de Ventas aquí */}
-                <List>
-                  <ListItem disablePadding>
-                    <ListItemButton component="a" href="/ventas">
-                      <GiPayMoney className="m-3 text-xl font-bold" />
-                      Ventas
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton component="a" href="/pedidos">
-                      <FiBox className="m-3 text-xl font-bold" />
-                      Pedidos
-                    </ListItemButton>
-                  </ListItem>
-                  {/* Puedes agregar más opciones de submenú de Ventas según sea necesario */}
-                </List>
-              </Collapse>
-            )}
-          </div>
-        ))}
-      </List>
+      {/* Menú colapsable para pantallas más pequeñas */}
+      <Hidden mdUp>
+        <div className="fixed left-0 top-0 z-10 bg-white py-4 shadow-md">
+          <Typography variant="h6" align="center">Menu</Typography>
+          <List>
+            {sidebarItems.map((item) => (
+              <ListItem key={item.text} disablePadding>
+                <ListItemButton component="a" href={item.link}>
+                  {item.icon}
+                  <ListItemText primary={item.text} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </div>
+      </Hidden>
     </div>
   )
 }

@@ -122,3 +122,39 @@ model Empleados {
   puesto             String?  @db.VarChar(255)
   salario            Decimal? @db.Decimal(10, 2)
 }
+
+model Pilotos {
+  id                 Int      @id @default(autoincrement())
+  nombre             String?  @db.VarChar(255)
+  apellido           String?  @db.VarChar(255)
+  direccion          String?  @db.VarChar(255)
+  telefono           String?  @db.VarChar(15)
+  correo_electronico String?  @db.VarChar(100)
+  puesto             String?  @db.VarChar(255)
+  salario            Decimal? @db.Decimal(10, 2)
+}
+
+model I18N {
+  LENGUAJE         String  @default("es") @db.VarChar(5)
+  ID_MENSAJE       String  @db.VarChar(100)
+  MENSAJE          String  @db.VarChar(4000)
+  ID_MENSAJE_PADRE String? @db.VarChar(100)
+  I18N             I18N?   @relation("I18NToI18N", fields: [LENGUAJE, ID_MENSAJE_PADRE], references: [LENGUAJE, ID_MENSAJE], onUpdate: Restrict, map: "I18N_MSJPADRE_FK")
+  other_I18N       I18N[]  @relation("I18NToI18N")
+
+  @@id([LENGUAJE, ID_MENSAJE])
+  @@index([LENGUAJE, ID_MENSAJE_PADRE], map: "I18N_MSJPADRE_FK")
+}
+
+model LISTA_VALORES {
+  ID_LISTA            String  @db.VarChar(20)
+  VALOR               String  @db.VarChar(100)
+  TEXTO               String  @db.VarChar(100)
+  PERMITE_ESPECIFICAR String  @default("N") @db.VarChar(1)
+  ICONO               String? @db.VarChar(256)
+  CLASES_CSS          String? @db.VarChar(256)
+  I18N                String? @db.VarChar(256)
+  ESTADO              String  @default("A") @db.VarChar(1)
+
+  @@id([ID_LISTA, VALOR])
+}
