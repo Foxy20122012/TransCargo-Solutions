@@ -206,7 +206,7 @@ const ClientesPage = () => {
             initialFormData={selectedCliente}
             // @ts-ignore
             onUpdateClick={handleUpdateClick} // Pasa la función handleUpdateClick al DynamicForm
-            columns={1}
+            columns={2}
           />
             <div className="flex justify-end mt-4">
     <button

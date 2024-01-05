@@ -54,6 +54,7 @@ const ClientesPage = () => {
         selectedEmpleado,
         setSelectedEmpleado,
         updateEmpleado,
+        
       } = useEmpleados();
 
 
@@ -200,7 +201,7 @@ const ClientesPage = () => {
             initialFormData={selectedEmpleado}
             // @ts-ignore
             onUpdateClick={handleUpdateClick} // Pasa la función handleUpdateClick al DynamicForm
-            columns={1}
+            columns={2}
           />
             {/* <DataForm
               headers={headers}
