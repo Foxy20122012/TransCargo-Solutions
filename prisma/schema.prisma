@@ -158,3 +158,24 @@ model LISTA_VALORES {
 
   @@id([ID_LISTA, VALOR])
 }
+
+model MateriasPrimas {
+  id                Int     @id @default(autoincrement())
+  nombre            String? @db.VarChar(255)
+  cantidad_inicial  String? @db.VarChar(255)
+  proveedor_id      String? @db.VarChar(255)
+  fecha_recepcion   String? @db.VarChar(255)
+  codigo_unidad     String? @db.VarChar(10)
+  precio_unitario   String? @db.VarChar(255)
+  fecha_vencimiento String? @db.VarChar(255)
+  ubicacion_almacen String? @db.VarChar(100)
+  descripcion       String? @db.VarChar(500)
+  cuenta            String? @db.VarChar(255)
+  folio_interno     String? @db.VarChar(255)
+  destino           String? @db.VarChar(255)
+  odometro_llegada  String? @db.VarChar(255)
+  descarga_pagada   String? @db.VarChar(50)
+  valor_viaje       String? @db.VarChar(255)
+  ganancia_viaje    String? @db.VarChar(255)
+  numero_de_factura String? @db.VarChar(255)
+}

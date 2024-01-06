@@ -9,7 +9,7 @@ import useLoading from "../../hooks/useLoading"
 import React, { useEffect, useState } from "react";
 
 import presets from "../../utils/globalPresets"
-import fetchedHeaders from "../../models/encabezadoModel"
+import fetchedHeaders from "../../models/materiasPrimas/headersMateria"
 // import useLoading from "../../hooks/useLoading"
 import useHasMounted from '../../hooks/useHasMounted'
 
@@ -19,11 +19,11 @@ import Loading from "../../components/Loading"
 // import DataTable from "vComponents/dist/DataTable"
 import BtnAppBar from '../../components/appBar';
 import DynamicForm from "../../components/DynamicForm";
-import { useClientes } from "../../context/ClientesContext";
-import { clientesColumns } from "../../models/clientesMls";
-import { transformClientesToRows } from "../../models/clientesMls";
+import { useMateriasPrimas } from "../../context/MateriasPrimasContext";
+import { materiasPrimasColumns } from "../../models/materiasPrimas/materiasPrimasMls";
+import { transformMateriasPrimasToRows } from "../../models/materiasPrimas/materiasPrimasMls";
 import clienteModel from "../../models/clientes/clienteModel";
-import clientesProps from "../../models/clientesPs";
+import materiasPrimasProps from "../../models/materiasPrimas/materiasPrimasProps";
 import Modals from "../../components/Modals";
 import SuccessModal from "../../components/SuccessModal";
 // import tabContent from "../../models/clientesPs"
@@ -42,9 +42,9 @@ const VDialog = dynamic(() => { return import("vComponents/dist/VDialog") }, { s
 //   (key) => ({ key, label: clientesColumns[key] })
 // );
 
-const columns = Object.keys(clientesColumns).map((key) => ({
+const columns = Object.keys(materiasPrimasColumns).map((key) => ({
   key,
-  label: clientesColumns[key]
+  label: materiasPrimasColumns[key]
 }));
 
 
@@ -52,14 +52,14 @@ const columns = Object.keys(clientesColumns).map((key) => ({
 const ClientesPage = () => {
 
   const {
-    clientes,
-    createCliente,
-    loadClientes,
-    deleteCliente,
-    selectedCliente,
-    setSelectedCliente,
-    updateCliente,
-  } = useClientes();
+    materiasPrimas,
+    createMateriasPrimas,
+    loadMateriasPrimas,
+    deleteMateriasPrimas,
+    selectedMateriasPrimas,
+    setSelectedMateriasPrimas,
+    updateMateriasPrimas,
+  } = useMateriasPrimas();
 
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -69,7 +69,7 @@ const ClientesPage = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [isOpen2, setIsOpen2] = useState(false)
   const [yesNoOpen, setYesNoOpen] = useState(false)
-  const rowsClientes = transformClientesToRows(clientes); // Asegúrate de tener definida la función transformClientesToRows y la variable clientes.
+  const rowsViajes = transformMateriasPrimasToRows(materiasPrimas); // Asegúrate de tener definida la función transformClientesToRows y la variable clientes.
   const [model, setModel] = useState(clienteModel()) 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -79,7 +79,7 @@ const ClientesPage = () => {
 
 
   useEffect(() => {
-    loadClientes();
+    loadMateriasPrimas();
   }, []);
 
   // Define los estados para las cabeceras y los elementos
@@ -88,8 +88,8 @@ const ClientesPage = () => {
   const hasMounted = useHasMounted()
 
 
-  const openDeleteModal = (client) => {
-    setClientToDelete(client);
+  const openDeleteModal = (MateriasPrimas) => {
+    setClientToDelete(MateriasPrimas);
     setIsDeleteModalOpen(true);
   };
 
@@ -98,13 +98,13 @@ const ClientesPage = () => {
     setIsDeleteModalOpen(false);
   };
 
-  const handleEditCliente = (client) => {
-    setSelectedCliente(client);
+  const handleEditCliente = (MateriasPrimas) => {
+    setSelectedMateriasPrimas(MateriasPrimas);
     setIsFormVisible(true);
   };
 
-  const handleDelete = (cliente) => {
-    openDeleteModal(cliente);
+  const handleDelete = (MateriasPrimas) => {
+    openDeleteModal(MateriasPrimas);
   };
   // const deleteItem = (item) => {
   //   setModel(item)
@@ -112,22 +112,22 @@ const ClientesPage = () => {
   // }
 
   const handleNewClick = () => {
-    setSelectedCliente(null);
+    setSelectedMateriasPrimas(null);
     setIsFormVisible(true);
   };
 
   const handleCreateOrUpdateCliente = async (formData) => {
     try {
-      if (selectedCliente) {
+      if (selectedMateriasPrimas) {
         // Estás editando un cliente existente
-        await updateCliente(selectedCliente.id, formData);
+        await updateMateriasPrimas(selectedMateriasPrimas.id, formData);
       } else {
         // Estás creando un nuevo cliente
-        await createCliente(formData);
+        await createMateriasPrimas(formData);
       }
       setIsFormVisible(false);
-      setSelectedCliente(null);
-      loadClientes();
+      setSelectedMateriasPrimas(null);
+      loadMateriasPrimas();
     } catch (error) {
       console.error("Error al crear o actualizar el cliente:", error);
     }
@@ -135,13 +135,13 @@ const ClientesPage = () => {
 
   const handleUpdateClick = async (formData) => {
     try {
-      if (selectedCliente) {
+      if (selectedMateriasPrimas) {
         // Estás editando un cliente existente
-        await updateCliente(selectedCliente.id, formData); // Envía los datos actualizados al servidor
+        await updateMateriasPrimas(selectedMateriasPrimas.id, formData); // Envía los datos actualizados al servidor
       }
       setIsFormVisible(false);
-      setSelectedCliente(null);
-      loadClientes();
+      setSelectedMateriasPrimas(null);
+      loadMateriasPrimas();
     } catch (error) {
       console.error("Error al actualizar el cliente:", error);
     }
@@ -161,10 +161,10 @@ const ClientesPage = () => {
   
   const handleConfirmDelete = async () => {
     try {
-      await deleteCliente(clientToDelete.id); // Suponiendo que el cliente tiene una propiedad 'id'
+      await deleteMateriasPrimas(clientToDelete.id); // Suponiendo que el cliente tiene una propiedad 'id'
       setIsDeleteSuccess(true); // Puedes manejar esto según tus necesidades
       setIsDeleteModalOpen(false);
-      loadClientes(); // Vuelve a cargar los clientes después de eliminar uno
+      loadMateriasPrimas(); // Vuelve a cargar los clientes después de eliminar uno
     } catch (error) {
       console.error("Error al eliminar el cliente:", error);
       setIsDeleteSuccess(false); // Opcional: manejar el caso de fallo en la eliminación
@@ -180,10 +180,10 @@ const ClientesPage = () => {
     <BtnAppBar/>
     <div className="mt-20 ml-12">
       <div className="my-2 uppercase font-bold text-base">
-      Clientes
+      Gestión De Viajes
       </div>
       {/* Pasa las cabeceras y elementos al componente DataTable */}
-      <DataTable headers={headers} items={rowsClientes}  presets={presets} 
+      <DataTable headers={headers} items={rowsViajes}  presets={presets} 
        onNewItem={handleNewClick}
        onEditItem={handleEditCliente} 
        onDeleteItem={handleDelete}
@@ -196,11 +196,11 @@ const ClientesPage = () => {
       className='-translate-x-1/2 bg-black bg-opacity-25'
       >
            <DynamicForm
-            formProps={clientesProps}
+            formProps={materiasPrimasProps}
             onSubmit={handleCreateOrUpdateCliente}
-            showCreateButton={!selectedCliente}
-            showUpdateButton={!!selectedCliente}
-            initialFormData={selectedCliente}
+            showCreateButton={!selectedMateriasPrimas}
+            showUpdateButton={!!selectedMateriasPrimas}
+            initialFormData={selectedMateriasPrimas}
             // @ts-ignore
             onUpdateClick={handleUpdateClick} // Pasa la función handleUpdateClick al DynamicForm
             columns={2}
@@ -222,7 +222,7 @@ const ClientesPage = () => {
           onConfirm={async () => {
             try {
               if (clientToDelete) {
-                await deleteCliente(clientToDelete.id);
+                await deleteMateriasPrimas(clientToDelete.id);
                 closeDeleteModal();
                 setIsDeleteSuccess(true);
                 loadClientes();
