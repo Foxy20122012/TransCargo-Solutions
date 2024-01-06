@@ -10,9 +10,11 @@ import BtnAppBar from '../../../components/appBar'
 // const Modal = dynamic(() => { return import("vComponents/dist/Modal") }, { ssr: false })
 
 async function loadProducts() {
-  const { data } = await axios.get('http://localhost:3000/api/products');
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+  const { data } = await axios.get(`${apiUrl}/api/products`);
   return data;
 }
+
 
 async function ProductsCardsPage() {
   const products = await loadProducts();
