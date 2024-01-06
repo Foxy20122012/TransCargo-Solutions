@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 import Sidebar from "../components/Sidebar";
 import AllContexts from "../context/AllContext";
 import { ToastContainer } from 'react-toastify';
-import I18nProvider from '../plugins/i18nContext'
+// import I18nProvider from '../plugins/i18nContext'
 import BtnAppBar from '../components/appBar'
 import 'vComponents/styles/generated/output.css'
 import 'vComponents/styles/generated/bgColors.min.css'
@@ -21,7 +21,6 @@ import Footer from "../components/Footer";
 
 // const Footer = dynamic(() => import('vComponents/dist/Footer'), { ssr: false });
 const Navbar = dynamic(() => import('vComponents/dist/Navbar'), { ssr: false });
-const ResponsiveContainer = dynamic(() => import('../layout/ResponsiveContainer'), { ssr: false });
 
 
 export default function RootLayout({ children }) {
@@ -43,7 +42,7 @@ export default function RootLayout({ children }) {
               <main>
                 <div className={userObj && userObj.nombre_usuario ? 'px-4 sm:px-6 lg:px-8 py-2 w-full max-w-9xl mx-auto bg-gray-100 mb-10' : ''}>
                 <AllContexts>
-                <I18nProvider locale={'es'}>
+                {/* <I18nProvider locale={'es'}> */}
                 <LoadingProvider>
                   <ToastContainer/>
                   {/* <ResponsiveContainer> */}
@@ -51,7 +50,7 @@ export default function RootLayout({ children }) {
                   {children}
                   {/* </ResponsiveContainer> */}
                   </LoadingProvider>
-                </I18nProvider>
+                {/* </I18nProvider> */}
                 </AllContexts>
                 </div>
               </main>

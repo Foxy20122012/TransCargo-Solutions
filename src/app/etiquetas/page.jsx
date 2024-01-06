@@ -1,302 +1,280 @@
 'use client'
-import { useEffect, useState } from "react"
-import dynamic from "next/dynamic"
-import { toast } from 'react-toastify'
-import { findIndex } from "underscore"
-import { execute } from "../../helper/clientApi"
-import useI18n from '../../hooks/useI18n'
-// import useLoading from "../hooks/useLoading"
-// import useHasMounted from '../hooks/useHasMounted'
-import presets from "../../utils/globalPresets"
-import environment from "../../utils/environment"
-import i18nProps from "../../models/i18nProps"
-import i18nModel from "../../models/i18nModel"
 
-const DataTable = dynamic(() => { return import("vComponents/dist/DataTable") }, { ssr: false })
+// Importa las bibliotecas y componentes necesarios
+import dynamic from "next/dynamic";
+
+import useLoading from "../../hooks/useLoading"
+// import useHasMounted from '../../hooks/useHasMounted'
+// import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+
+import presets from "../../utils/globalPresets"
+import fetchedHeaders from "../../models/encabezadoModel"
+// import useLoading from "../../hooks/useLoading"
+import useHasMounted from '../../hooks/useHasMounted'
+
+
+// import BtnAppBar from "../../components/appBar"
+import Loading from "../../components/Loading"
+// import DataTable from "vComponents/dist/DataTable"
+import BtnAppBar from '../../components/appBar';
+import DynamicForm from "../../components/DynamicForm";
+import { useClientes } from "../../context/ClientesContext";
+import { clientesColumns } from "../../models/clientesMls";
+import { transformClientesToRows } from "../../models/clientesMls";
+import clienteModel from "../../models/clientes/clienteModel";
+import clientesProps from "../../models/clientesPs";
+import Modals from "../../components/Modals";
+import SuccessModal from "../../components/SuccessModal";
+// import tabContent from "../../models/clientesPs"
+
+
+// Importa el componente DataTable de forma dinámica
+const DataTable = dynamic(() => import("vComponents/dist/DataTable"), { ssr: false });
+const Stepper = dynamic(() => import("vComponents/dist/Stepper"), { ssr: false });
+const YesNoQuestion = dynamic(() => { return import("vComponents/dist/YesNoQuestion") }, { ssr: false })
+const Modal = dynamic(() => { return import("vComponents/dist/Modal") }, { ssr: false })
 const DataForm = dynamic(() => { return import("vComponents/dist/DataForm") }, { ssr: false })
 const VDialog = dynamic(() => { return import("vComponents/dist/VDialog") }, { ssr: false })
-const YesNoQuestion = dynamic(() => { return import("vComponents/dist/YesNoQuestion") }, { ssr: false })
-/**
- * 
- * @brief Mantenimiento de la tabla i18n para las etiquetas en las pantallas
- */
-const Etiquetas = () => {
+// const VistaConsulta = dynamic(() => { return import("vComponents/dist/VistaConsulta") }, { ssr: false })
 
-  const i18n = useI18n()
-  // const loading = useLoading()
-  // const hasMounted = useHasMounted()
+// const columns = (Object.keys(clientesColumns) as (keyof Clientes)[]).map(
+//   (key) => ({ key, label: clientesColumns[key] })
+// );
 
-  const [headers, setHeaders] = useState(i18nProps()) // {valiable con las propiedades de los campos}
-  const [items, setItems] = useState([])
-  const [token, setToken] = useState('')
-  const [isEdit, setIsEdit] = useState(false)
+const columns = Object.keys(clientesColumns).map((key) => ({
+  key,
+  label: clientesColumns[key]
+}));
+
+
+// Define el componente principal
+const ClientesPage = () => {
+
+  const {
+    clientes,
+    createCliente,
+    loadClientes,
+    deleteCliente,
+    selectedCliente,
+    setSelectedCliente,
+    updateCliente,
+  } = useClientes();
+
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [clientToDelete, setClientToDelete] = useState(null);
+  const [isDeleteSuccess, setIsDeleteSuccess] = useState(false);
+  const [isFormVisible, setIsFormVisible] = useState(false);
   const [isOpen, setIsOpen] = useState(false)
   const [isOpen2, setIsOpen2] = useState(false)
   const [yesNoOpen, setYesNoOpen] = useState(false)
-  const [model, setModel] = useState(i18nModel()) // {variable con los campos que mapean los datos en la tabla}
-  const sprSelect = 'SPR_I18N_S'
-  const sprInsert = 'SPR_I18N_I'
-  const sprUpdate = 'SPR_I18N_U'
-  const sprDelete = 'SPR_I18N_D'
-  const sprListasValores = 'SPR_LISTA_VALORES_S'
-  const sprListasValoresConParametros = 'SPR_CATALOGOS_ENTIDAD'
-  const formName = 'frmI18n'
+  const rowsClientes = transformClientesToRows(clientes); // Asegúrate de tener definida la función transformClientesToRows y la variable clientes.
+  const [model, setModel] = useState(clienteModel()) 
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const newItem = (DFDialogTurn = 0) => {
-    setIsEdit(false)
-    setModel(i18nModel())
-    if (DFDialogTurn === 0) {
-      setIsOpen(true)
-    } else {
-      setIsOpen2(true)
-    }
-  }
-
-  const editItem = (item) => {
-    setIsEdit(true)
-    setModel(item)
-    setIsOpen(true)
-  }
-
-  const deleteItem = (item) => {
-    setModel(item)
-    setYesNoOpen(true)
-  }
-
-  const cancelDeleteItem = () => {
-    setModel(i18nModel())
-    setYesNoOpen(false)
-  }
-
-  const saveItem = async (modelSave, saveNew = false) => {
-    // loading.start()
-    const spr = isEdit === true ? sprUpdate : sprInsert
-    const resultado = await execute(spr, [
-      token,
-      /* propiedades según el modelo asociado (spr insert y update deben llevar la misma cantidad y orden de parámetros) */
-      modelSave.lenguaje,
-      modelSave.id_mensaje,
-      modelSave.mensaje, 
-      modelSave.id_mensaje_padre
-    ])
-    // loading.stop()
-    if (environment.validaResultadoDB(resultado, i18n, toast, true) === true) {
-      listar(token)
-      if (isOpen === true) {
-        setIsOpen(false)
-        if (saveNew === true) {
-          newItem(1)
-        }
-      } else {
-        setIsOpen2(false)
-        if (saveNew === true) {
-          newItem(0)
-        }
-      }
-    }
-  }
-
-  const doDeleteItem = async (item) => {
-    // loading.start()
-    const resultado = await execute(sprDelete, [
-      token,
-      item.lenguaje,
-      item.id_mensaje
-    ])
-    // loading.stop()
-    setYesNoOpen(false)
-    if (environment.validaResultadoDB(resultado, i18n, toast, true) === true) {
-      listar(token)
-    }
-  }
-
-  /**
-   * @brief obtiene los tipos de clientes desde base de datos
-   * @param {*} token valor encriptado que se genera al dar login
-   */
-  const listar = async (token) => {
-    // loading.start()
-    const response = await execute(sprSelect, [token])
-    // loading.stop()
-    if (environment.validaResultadoDB(response, i18n, toast) === true) {
-      setItems(response)
-    }
-  }
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+  };
 
 
-
-  /**
-  * @brief obtiene todas las listas de valores a utilizar en la pantalla desde Base de Datos
-  */
-  const listarCatalogos = async () => {
-    const newHeaders = []
-    for (const hds of headers) {
-      if (hds.listName && hds.listName.length > 0) {
-        const lov = await execute(sprListasValores, [hds.listName])
-        if (environment.validaResultadoDB(lov, i18n, toast) === true) {
-          hds.list = lov
-        }
-      }
-      newHeaders.push(hds)
-    }
-    setHeaders(newHeaders)
-  }
-
-  /**
-   * @brief obtiene todas las listas de valores por compañía o parametros adicionales a utilizar en la pantalla desde Base de Datos
-   */
-  const listarCatalogosParametros = async (token) => {
-    const newHeaders = []
-    for (const hds of headers) {
-      if (hds.listNameParams && hds.listNameParams.length > 0) {
-        let params = []
-        if (hds.fixedListParams && Array.isArray(hds.fixedListParams) && hds.fixedListParams.length === 3) {
-          params = [token, hds.listNameParams, ...hds.fixedListParams]
-        } else {
-          params = [token, hds.listNameParams, null, null, null]
-        }
-        const lov = await execute(sprListasValoresConParametros, params)
-        if (environment.validaResultadoDB(lov, i18n, toast) === true) {
-          hds.list = lov
-        }
-      }
-      newHeaders.push(hds)
-    }
-    setHeaders(newHeaders)
-  }
-
-  /**
-   * 
-   * @brief traduce las etiquetas según el lenguaje seleccionaao
-   * @brief cambiando el valor de las variables headers
-   */
-  const i18nHeaders = () => {
-    return new Promise((resolve) => {
-      const newHeaders = []
-      for (const hds of headers) {
-        if (hds.i18n && hds.i18n.length > 0) {
-          hds.text = i18n.t(hds.i18n)
-        }
-        if (hds.pristineMessages) {
-          Object.keys(hds.pristineMessages).forEach((msg) => {
-            if (msg.includes('-params') === false) {
-              if (hds.pristineMessages[`${msg}-params`]) {
-                hds.inputProps[`data-pristine-${msg}-message`] = i18n.t(hds.pristineMessages[msg], hds.pristineMessages[`${msg}-params`])
-              } else {
-                hds.inputProps[`data-pristine-${msg}-message`] = i18n.t(hds.pristineMessages[msg])
-              }
-            }
-          })
-        }
-        newHeaders.push(hds)
-      }
-      resolve(newHeaders)
-    })
-  }
-
-  const translateHeaders = async () => {
-    const newHeaders = await i18nHeaders()
-    setHeaders(newHeaders)
-  }
-
-  const onChangeLenguaje = async (val, item) => {
-    const newHeaders = headers.slice()
-    const idxPadre = findIndex(newHeaders, { value: 'id_mensaje_padre'})
-    newHeaders[idxPadre].fixedListParams = [val, null, null]
-    setHeaders(newHeaders)
-    const env = await environment.getEnvUser()
-    listarCatalogosParametros(env.token)
-  }
-
-  /**
-  * @brief obtiene el token guardado en las cookies del navegador y los datos almacenados en localStorage de la aplicacion
-  * @brief inicializa los catalogos y listados
-  * @returns si no esta el token redirige a la pantalla de login
-  */
-  const getEnv = async () => {
-    // Eliminamos la lógica relacionada con la validación de sesión.
-    // Por ejemplo, si anteriormente redirigías si no había sesión activa, elimina ese código.
-    setToken(''); // Puedes eliminar esto o mantenerlo según lo que necesites.
-    listar(''); // Puedes pasar un token vacío o incluso eliminarlo si ya no lo necesitas.
-    listarCatalogos();
-    listarCatalogosParametros('');
-    await translateHeaders();
-    const newHeaders = headers.slice()
-    const idxLenguaje = findIndex(newHeaders, { value: 'lenguaje' })
-    newHeaders[idxLenguaje].onChange = onChangeLenguaje;
-    setHeaders(newHeaders)
-  }
-
-  /**
-   * @brief inicializa los datos de ambiente y el listado desde base de datos
-   */
-  // when page is mounted
   useEffect(() => {
-      getEnv()
+    loadClientes();
+  }, []);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  // Define los estados para las cabeceras y los elementos
+  const [headers, setHeaders] = useState([]); // Define tus cabeceras aquí
+  const [items, setItems] = useState([]); // Define tus elementos aquí
+  const hasMounted = useHasMounted()
 
+
+  const openDeleteModal = (client) => {
+    setClientToDelete(client);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setClientToDelete(null);
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleEditCliente = (client) => {
+    setSelectedCliente(client);
+    setIsFormVisible(true);
+  };
+
+  const handleDelete = (cliente) => {
+    openDeleteModal(cliente);
+  };
+  // const deleteItem = (item) => {
+  //   setModel(item)
+  //   setYesNoOpen(true)
+  // }
+
+  const handleNewClick = () => {
+    setSelectedCliente(null);
+    setIsFormVisible(true);
+  };
+
+  const handleCreateOrUpdateCliente = async (formData) => {
+    try {
+      if (selectedCliente) {
+        // Estás editando un cliente existente
+        await updateCliente(selectedCliente.id, formData);
+      } else {
+        // Estás creando un nuevo cliente
+        await createCliente(formData);
+      }
+      setIsFormVisible(false);
+      setSelectedCliente(null);
+      loadClientes();
+    } catch (error) {
+      console.error("Error al crear o actualizar el cliente:", error);
+    }
+  };
+
+  const handleUpdateClick = async (formData) => {
+    try {
+      if (selectedCliente) {
+        // Estás editando un cliente existente
+        await updateCliente(selectedCliente.id, formData); // Envía los datos actualizados al servidor
+      }
+      setIsFormVisible(false);
+      setSelectedCliente(null);
+      loadClientes();
+    } catch (error) {
+      console.error("Error al actualizar el cliente:", error);
+    }
+  };
+  
+
+  // Lógica para obtener y configurar las cabeceras y elementos, por ejemplo, useEffect o llamadas a API...
+  useEffect(() => {
+
+    
+    
+    // Actualiza los estados con los datos obtenidos
+    setHeaders(fetchedHeaders);
+    // setItems(fetchedItems);
+  }, []); // Dependencias vacías para que se ejecute una vez al montar el componente
+
+  
+  const handleConfirmDelete = async () => {
+    try {
+      await deleteCliente(clientToDelete.id); // Suponiendo que el cliente tiene una propiedad 'id'
+      setIsDeleteSuccess(true); // Puedes manejar esto según tus necesidades
+      setIsDeleteModalOpen(false);
+      loadClientes(); // Vuelve a cargar los clientes después de eliminar uno
+    } catch (error) {
+      console.error("Error al eliminar el cliente:", error);
+      setIsDeleteSuccess(false); // Opcional: manejar el caso de fallo en la eliminación
+    }
+  };
+  
+  if (!hasMounted) {
+    return <Loading/>; //<Loadig />
+  }
+//
   return (
     <>
-      <DataTable
-        i18n={i18n}
-        headers={headers}
-        items={items}
-        onNewItem={newItem}
-        onEditItem={editItem} 
-        onDeleteItem={deleteItem}
-        presets={presets}
+    <BtnAppBar/>
+    <div className="mt-20 ml-12">
+      <div className="my-2 uppercase font-bold text-base">
+      Clientes
+      </div>
+      {/* Pasa las cabeceras y elementos al componente DataTable */}
+      <DataTable headers={headers} items={rowsClientes}  presets={presets} 
+       onNewItem={handleNewClick}
+       onEditItem={handleEditCliente} 
+       onDeleteItem={handleDelete}
+       
       />
-      {isOpen && isOpen === true && 
+         {isFormVisible && isFormVisible === true && 
       <VDialog
-      isOpen={isOpen}
+      isOpen={isFormVisible}
       size='sm'
       className='-translate-x-1/2 bg-black bg-opacity-25'
       >
-        <DataForm
-        headers={headers}
-        model={model}
-        i18n={i18n}
-        presets={presets}
-        name={formName}
-        isEdit={isEdit}
-        onSave={(newModel, saveNew) => saveItem(newModel, saveNew) } 
-        onCancel={() => setIsOpen(false)} 
-        />
+           <DynamicForm
+            formProps={clientesProps}
+            onSubmit={handleCreateOrUpdateCliente}
+            showCreateButton={!selectedCliente}
+            showUpdateButton={!!selectedCliente}
+            initialFormData={selectedCliente}
+            // @ts-ignore
+            onUpdateClick={handleUpdateClick} // Pasa la función handleUpdateClick al DynamicForm
+            columns={2}
+          />
+            <div className="flex justify-end mt-4">
+    <button
+      onClick={() => setIsFormVisible(false)} // Cierra el modal o dialogo
+      className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+    >
+      Cancelar
+    </button>
+  </div>
       </VDialog>
       }
+        <Modals
+          isOpen={isDeleteModalOpen}
+          title="Confirmar Eliminación"
+          message={`¿Estás seguro de que deseas eliminar al cliente ${clientToDelete?.nombre}?`}
+          onConfirm={async () => {
+            try {
+              if (clientToDelete) {
+                await deleteCliente(clientToDelete.id);
+                closeDeleteModal();
+                setIsDeleteSuccess(true);
+                loadClientes();
+              }
+            } catch (error) {
+              console.error("Error al eliminar el cliente:", error);
+            }
+          }}
+          onCancel={closeDeleteModal}
+          // @ts-ignore
+          onUpdate={handleUpdateClick}
+          showUpdateButton={false}
+          showConfirmButton={true} // Configura según tus necesidades
+        />
+        <SuccessModal
+          isOpen={isDeleteSuccess}
+          onClose={() => setIsDeleteSuccess(false)}
+          message="El cliente se ha eliminado correctamente."
+          buttonText="Aceptar"
+        />
 
-      {isOpen2 && isOpen2 === true && 
-      <VDialog
-      isOpen={isOpen2}
-      size='sm'
-      className='-translate-x-1/2 bg-black bg-opacity-25'
+      <Stepper steps={["Paso 1", "Paso 2", "Paso 3", "paso 4"]} />
+      {/* <VistaConsulta data={items} headers={headers} /> */}
+      
+      <div className="bg-cyan-200">
+      <button onClick={() => setIsModalVisible(true)}>Mostrar Modal</button>
+
+      <Modal
+        isVisible={isModalVisible}
+        onClose={handleCloseModal}
+        size="pequeño"
+        no_proyecto="Proyecto 123"
+        nombre_titulo="Título del Modal"
+        showClose={true}
+        title={<h2>Título Personalizado</h2>}
+        closeOnEscape={true}
+        headerTextClass="text-red-500"
+        headerClass="bg-blue-500"
+        childCardClass="p-6"
       >
-        <DataForm
-        headers={headers}
-        model={model}
-        i18n={i18n}
-        presets={presets}
-        name={formName}
-        isEdit={isEdit}
-        onSave={(newModel, saveNew) => saveItem(newModel, saveNew) } 
-        onCancel={() => setIsOpen2(false)} 
-        />
-      </VDialog>
-      }
-      { yesNoOpen === true &&
-        <YesNoQuestion  
-          title={i18n.t('common.deleteRow')} 
-          message={i18n.t('common.deleteConfirm', { label: model.descripcion })} 
-          onYes={() => doDeleteItem(model)}
-          onNo={() => cancelDeleteItem()}
-        />
-      }
+        {/* Aquí puedes colocar el contenido que desees dentro del modal */}
+        <p>Contenido del modal...</p>
+      </Modal>
+    </div>
+    
+
+      {/* Resto del código */}
+      </div>
     </>
-  )
-}
+   
+  );
+};
 
-
-
-export default Etiquetas
+// Exporta el componente principal
+export default ClientesPage;

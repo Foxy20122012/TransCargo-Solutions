@@ -2,7 +2,6 @@
 
 // Importa las bibliotecas y componentes necesarios
 import dynamic from "next/dynamic";
-import useI18n from '../../hooks/useI18n';
 import useLoading from "../../hooks/useLoading"
 // import useHasMounted from '../../hooks/useHasMounted'
 // import { useState, useEffect } from "react";
@@ -12,8 +11,6 @@ import presets from "../../utils/globalPresets"
 import fetchedHeaders from "../../models/encabezadoModel"
 // import useLoading from "../../hooks/useLoading"
 import useHasMounted from '../../hooks/useHasMounted'
-import environment from "../../utils/environment"
-import { execute } from "../../helper/clientApi"
 
 // import BtnAppBar from "../../components/appBar"
 import Loading from "../../components/Loading"
@@ -86,8 +83,6 @@ const ClientesPage = () => {
   // Define los estados para las cabeceras y los elementos
   const [headers, setHeaders] = useState([]); // Define tus cabeceras aquí
   const [items, setItems] = useState([]); // Define tus elementos aquí
-  const i18n = useI18n()
-  const loading = useLoading()
   const hasMounted = useHasMounted()
 
 
@@ -186,7 +181,7 @@ const ClientesPage = () => {
       Clientes
       </div>
       {/* Pasa las cabeceras y elementos al componente DataTable */}
-      <DataTable headers={headers} items={rowsClientes}  presets={presets} i18n={i18n}
+      <DataTable headers={headers} items={rowsClientes}  presets={presets} 
        onNewItem={handleNewClick}
        onEditItem={handleEditCliente} 
        onDeleteItem={handleDelete}
