@@ -1,9 +1,10 @@
-import ProductForm from "../../components/ProductForm";
+// import ProductForm from "../../components/ProductForm";
 
 function NewPage() {
   return (
     <div className="flex justify-center items-center h-full">
-      <ProductForm />
+      {/* <ProductForm /> */}
+      hello
     </div>
   );
 }

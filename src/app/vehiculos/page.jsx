@@ -1,12 +1,15 @@
 import ProductCard from '../../components/ProductCard';
-import { conn } from '../../libs/mysql'
-import axios from 'axios';
-// import Navbar from '../../components/Navbar';
-import BtnAppBar from '../../components/appBar'
+import { conn } from '../../libs/mysql';
+import BtnAppBar from '../../components/appBar';
 
 async function loadProducts() {
-  const { data } = await axios.get('http://localhost:3000/api/products');
-  return data;
+  try {
+    const [products] = await conn.query("SELECT * FROM products"); // Utilizando conn para obtener los productos
+    return products;
+  } catch (error) {
+    console.error("Error al cargar los productos:", error);
+    return [];
+  }
 }
 
 async function ProductsPage() {

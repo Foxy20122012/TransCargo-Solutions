@@ -1,4 +1,4 @@
-import Buttons from "./Buttons";
+// import Buttons from "./Buttons";
 import { conn } from "../../../libs/mysql";
 import BtnAppBar from '../../../components/appBar'
 // import Navbar from "../../../components/Navbar"
@@ -36,7 +36,7 @@ async function ProductPage({ params }) {
               {product.price}
             </h4>
             <p className="text-gray-600 my-2 md:mb-6 uppercase">{product.description}</p>
-            <Buttons productId={product.id} />
+            {/* <Buttons productId={product.id} /> */}
           </div>
         </div>
         </div>
