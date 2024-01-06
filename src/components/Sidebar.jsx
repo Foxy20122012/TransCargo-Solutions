@@ -47,11 +47,6 @@ const Sidebar = () => {
       icon: <LuFiles className="m-3 text-xl font-bold" />
     },
     {
-      text: 'Vehiculos',
-      link: '/products',
-      icon: <PiTruckDuotone  className="m-3 text-xl font-bold" />
-    },
-    {
       text: 'Pendientes',
       link: '/nota',
       icon: <PiNotePencilFill className="m-3 text-xl font-bold" />
