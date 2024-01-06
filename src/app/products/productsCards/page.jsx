@@ -1,40 +1,48 @@
 // 'use client'
 import ProductCard from '../../../components/ProductCard';
-import dynamic from "next/dynamic";
-import { conn } from '../../../libs/mysql'
-import axios from 'axios';
-// import Navbar from '../../components/Navbar';
-// import React, { useEffect, useState } from "react";
-import BtnAppBar from '../../../components/appBar'
-
-// const Modal = dynamic(() => { return import("vComponents/dist/Modal") }, { ssr: false })
+import { conn } from '../../../libs/mysql';
+import BtnAppBar from '../../../components/appBar';
 
 async function loadProducts() {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-  const { data } = await axios.get(`${apiUrl}/api/products`);
-  return data;
+  try {
+    // Conectar a la base de datos
+    const db = await conn;
+
+    // Realizar la consulta para obtener los productos
+    const products = await db.query('SELECT * FROM product');
+
+    // Liberar la conexión a la base de datos
+    await db.end();
+
+    return products;
+  } catch (error) {
+    console.error('Error al cargar los productos:', error);
+    throw error;
+  }
 }
 
-
 async function ProductsCardsPage() {
-  const products = await loadProducts();
-  // const [isModalVisible, setIsModalVisible] = useState(false);
+  try {
+    const products = await loadProducts();
 
-  return (
-    <div>
-      <BtnAppBar />
-      {/* <button onClick={() => setIsModalVisible(true)}>Mostrar Modal</button> */}
-
-
-      <section className='container mx-auto mt-16 px-4 sm:px-8'> {/* Ajustamos el padding para pantallas más pequeñas */}
-        <div className='grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
-          {products.map(product => (
-            <ProductCard product={product} key={product.id} />
-          ))}
-        </div>
-      </section>
-    </div>
-  );
+    return (
+      <div>
+        <BtnAppBar />
+        <section className='container mx-auto mt-16 px-4 sm:px-8'>
+          <div className='grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
+            {products.map(product => (
+              <ProductCard product={product} key={product.id} />
+            ))}
+          </div>
+        </section>
+      </div>
+    );
+  } catch (error) {
+    // Manejar el error aquí si es necesario
+    console.error('Error al obtener los productos:', error);
+    // Aquí puedes renderizar un mensaje de error en tu UI si lo deseas
+    return <div>Error al cargar los productos.</div>;
+  }
 }
 
 export default ProductsCardsPage;
