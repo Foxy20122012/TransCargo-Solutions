@@ -49,7 +49,7 @@ const MainLayout = () => {
               <AiOutlinePicRight className="text-2xl" />
             </Button>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Transportes Perdomo
+              ERP
             </Typography>
             {/* Integra el componente UserMenu y pasa las props necesarias */}
             <Button color="inherit">
