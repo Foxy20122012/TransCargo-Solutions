@@ -25,6 +25,8 @@ const MantenimientoPage = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [headers, setHeaders] = useState([]); // Define tus cabeceras aquí
   const [items, setItems] = useState([]); // Define tus elementos aquí
+  const [idToDelete, setIdToDelete] = useState(null); // Nuevo estado para almacenar el ID del elemento a eliminar
+
   const hasMounted = useHasMounted()
 
   const handleCloseModal = () => {
@@ -61,21 +63,61 @@ const MantenimientoPage = () => {
 
 
 
-  const openDeleteModal = () => {
-  
+  const openDeleteModal = (id) => {
+    setIdToDelete(id);
+    setIsDeleteModalOpen(true);
   };
 
   const closeDeleteModal = () => {
- 
+    setIdToDelete(null); // Al cerrar el modal, restablece el estado a null
+    setIsDeleteModalOpen(false);
   };
 
-  const handleEditCliente = () => {
+  const handleEdit = () => {
 
   };
 
-  const handleDelete = () => {
-
+  const handleDelete = (id) => {
+    openDeleteModal(id);
   };
+
+
+  const handleCustomDelete = async () => {
+    try {
+      if (idToDelete === null || idToDelete === undefined || typeof idToDelete.id === 'undefined') {
+        console.error("ID a eliminar no está definido o no tiene una propiedad 'id'");
+        return;
+      }
+  
+      const idToDeleteNumber = Number(idToDelete.id); // Convierte a número
+  
+      if (isNaN(idToDeleteNumber)) {
+        console.error("ID a eliminar no es un número válido");
+        return;
+      }
+  
+      const response = await fetch(`https://apisuite.azurewebsites.net/api/mantenimientosVehiculos/${idToDeleteNumber}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.status === 204) {
+        const updatedItems = items.filter(item => item.id !== idToDeleteNumber);
+        setItems(updatedItems);
+        closeDeleteModal();
+        setIsDeleteSuccess(true);
+      } else {
+        console.error("Error al eliminar el dato:", response.status);
+      }
+    } catch (error) {
+      console.error("Error al realizar la solicitud HTTP:", error);
+    }
+  };
+  
+  
+  
 
 
   const handleNewClick = () => {
@@ -138,7 +180,7 @@ const MantenimientoPage = () => {
       <DataTable headers={headers} items={items}//  aca items debes cargar los datos a la tabla
       presets={presets} 
        onNewItem={handleNewClick}
-       onEditItem={handleEditCliente} 
+       onEditItem={handleEdit} 
        onDeleteItem={handleDelete}
        
       />
@@ -171,9 +213,9 @@ const MantenimientoPage = () => {
         <Modals
           isOpen={isDeleteModalOpen}
           title="Confirmar Eliminación"
-          message={`¿Estás seguro de que deseas eliminar al cliente ?`}
+          message={`¿Estás seguro de que deseas eliminar al dato ?`}
           // en onConfirm debes poner la logica para confirmar la eliminacion
-          onConfirm=""
+          onConfirm={handleCustomDelete}
           onCancel={closeDeleteModal}
           // @ts-ignore
           onUpdate={handleUpdateClick}
