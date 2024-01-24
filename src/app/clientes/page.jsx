@@ -71,6 +71,9 @@ const ClientesPage = () => {
   const [model, setModel] = useState(clienteModel()) 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+
+  
+
   const handleCloseModal = () => {
     setIsModalVisible(false);
   };

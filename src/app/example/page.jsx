@@ -163,7 +163,7 @@ const Page = () => {
             className="border p-2 mr-2"
           />
           <input
-            type="text"
+            type="date"
             name="address"
             placeholder="Dirección"
             value={newEmployee.address}

@@ -86,7 +86,6 @@ const materiasPrimasProps = [
     name: "folio_interno",
     type: "text",
     maxLength: 255,
-    readOnly: true,
   },
   {
     label: "Destino",
