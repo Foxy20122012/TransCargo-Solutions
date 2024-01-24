@@ -23,19 +23,42 @@ const MantenimientoPage = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleteSuccess, setIsDeleteSuccess] = useState(false);
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [headers, setHeaders] = useState([]); // Define tus cabeceras aquí
+  const [items, setItems] = useState([]); // Define tus elementos aquí
+  const hasMounted = useHasMounted()
 
   const handleCloseModal = () => {
     setIsModalVisible(false);
   };
 
   useEffect(() => {
-//Aca debe poner para cargar los datos a la tabla 
-  }, []);
+    const fetchData = async () => {
+      try {
+        // Realizar la solicitud HTTP para obtener los datos de la API
+        const response = await fetch("https://apisuite.azurewebsites.net/api/mantenimientosVehiculos");
+        
+        // Verificar si la solicitud fue exitosa (código 200)
+        if (response.ok) {
+          // Convertir la respuesta a formato JSON
+          const data = await response.json();
+          
+          // Asignar los datos a la variable items
+          setItems(data);
+        } else {
+          console.error("Error al obtener los datos de la API:", response.status);
+        }
+      } catch (error) {
+        console.error("Error al realizar la solicitud HTTP:", error);
+      }
+    };
+
+    // Llamar a la función fetchData para obtener los datos al montar el componente
+    fetchData();
+  }, []); // Dependencias vacías para que se ejecute una vez al montar el componente
+
 
   // Define los estados para las cabeceras y los elementos
-  const [headers, setHeaders] = useState([]); // Define tus cabeceras aquí
-  const [items, setItems] = useState([]); // Define tus elementos aquí
-  const hasMounted = useHasMounted()
+
 
 
   const openDeleteModal = () => {
@@ -85,6 +108,7 @@ const MantenimientoPage = () => {
   };
   
 
+  
   // Lógica para obtener y configurar las cabeceras y elementos, por ejemplo, useEffect o llamadas a API...
   useEffect(() => {
     setHeaders(mantenimientoModel);
@@ -111,7 +135,7 @@ const MantenimientoPage = () => {
       Clientes
       </div>
       {/* Pasa las cabeceras y elementos al componente DataTable */}
-      <DataTable headers={headers} items=""//  aca items debes cargar los datos a la tabla
+      <DataTable headers={headers} items={items}//  aca items debes cargar los datos a la tabla
       presets={presets} 
        onNewItem={handleNewClick}
        onEditItem={handleEditCliente} 
@@ -173,3 +197,4 @@ const MantenimientoPage = () => {
 };
 
 export default MantenimientoPage;
+

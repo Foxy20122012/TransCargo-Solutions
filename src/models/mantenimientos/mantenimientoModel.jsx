@@ -1,11 +1,11 @@
 const mantenimientoModel = () => {
     return [
       { text: "ID", value: "id" },
-      { text: "Unidad Asignada", value: "unidad_asignada" },
-      { text: "Tipo de Mantenimiento", value: "tipo_mantenimiento" },
-      { text: "Descripción de Mantenimiento", value: "descripcion_mantenimiento" },
-      { text: "Fecha de Mantenimiento", value: "fecha_mantenimiento" },
-      { text: "Costo de Mantenimiento", value: "costo_mantenimiento" },
+      { text: "Unidad Asignada", value: "UnidadAsignada" },
+      { text: "Tipo de Mantenimiento", value: "TipoMantenimiento" },
+      { text: "Descripción de Mantenimiento", value: "DescripcionMantenimiento" },
+      { text: "Fecha de Mantenimiento", value: "FechaMantenimiento" },
+      { text: "Costo de Mantenimiento", value: "CostoMantenimiento" },
       // Puedes agregar más cabeceras según tus necesidades
     ];
   };
