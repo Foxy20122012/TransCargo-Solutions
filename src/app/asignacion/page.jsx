@@ -74,7 +74,7 @@ const MantenimientoPage = () => {
   };
 
   const handleEdit = () => {
-
+    setIsFormVisible(true);
   };
 
   const handleDelete = (id) => {
@@ -127,14 +127,33 @@ const MantenimientoPage = () => {
 
   const handleCreateOrUpdate = async (formData) => {
     try {
-    //   if () {
+      // Puedes verificar si formData tiene un ID para determinar si estás creando o actualizando
+      const isCreating = !formData.id;
 
-    //   } else {
+      const apiEndpoint = isCreating
+        ? "https://apisuite.azurewebsites.net/api/mantenimientosVehiculos"
+        : `https://apisuite.azurewebsites.net/api/mantenimientosVehiculos/${formData.id}`;
 
-    //   }
-  
+      const method = isCreating ? 'POST' : 'PUT';
+
+      const response = await fetch(apiEndpoint, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const updatedItems = isCreating ? [...items, formData] : items.map(item => (item.id === formData.id ? formData : item));
+        setItems(updatedItems);
+        setIsFormVisible(false);
+        setIsDeleteSuccess(true); // Puedes cambiar esto según tus necesidades
+      } else {
+        console.error("Error al crear o actualizar el dato:", response.status);
+      }
     } catch (error) {
-      console.error("Error al crear o actualizar el dato:", error);
+      console.error("Error al realizar la solicitud HTTP:", error);
     }
   };
 
@@ -174,7 +193,7 @@ const MantenimientoPage = () => {
     <BtnAppBar/>
     <div className="mt-20 ml-12">
       <div className="my-2 uppercase font-bold text-base">
-      Clientes
+      Mantenimientos
       </div>
       {/* Pasa las cabeceras y elementos al componente DataTable */}
       <DataTable headers={headers} items={items}//  aca items debes cargar los datos a la tabla
@@ -193,7 +212,7 @@ const MantenimientoPage = () => {
            <DynamicForm
             formProps={mantenimientoProps}
             onSubmit={handleCreateOrUpdate}
-            showCreateButton=""// recibira el evento del boton crear del formulario
+            showCreateButton={handleCreateOrUpdate}// recibira el evento del boton crear del formulario
             showUpdateButton=""// recibira el evento del boton crear del formulario
             initialFormData=""// recibira el evento del cargar los datos al formulario cuando toque editar un dato
             // @ts-ignore
