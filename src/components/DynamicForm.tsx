@@ -41,7 +41,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   onCancelClick,
   columns = 1
 }) => {
-  const [formData, setFormData] = useState<any>({});
+  const [formData, setFormData] = useState<any>(initialFormData || {});
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {

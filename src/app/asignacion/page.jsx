@@ -20,6 +20,8 @@ const VDialog = dynamic(() => { return import("vComponents/dist/VDialog") }, { s
 // Define el componente principal
 const MantenimientoPage = () => {
 
+  const [editingItemId, setEditingItemId] = useState(null);
+  const [initialFormData, setInitialFormData] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleteSuccess, setIsDeleteSuccess] = useState(false);
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -73,9 +75,11 @@ const MantenimientoPage = () => {
     setIsDeleteModalOpen(false);
   };
 
-  const handleEdit = () => {
+  const handleEdit = (id) => {
+    setEditingItemId(id);
     setIsFormVisible(true);
   };
+  
 
   const handleDelete = (id) => {
     openDeleteModal(id);
@@ -159,14 +163,41 @@ const MantenimientoPage = () => {
 
   const handleUpdateClick = async (formData) => {
     try {
-    //   if () {
+      if (editingItemId === null) {
+        console.error("ID de edición no está definido");
+        return;
+      }
   
-    //   }
-
+      const apiEndpoint = `https://apisuite.azurewebsites.net/api/mantenimientosVehiculos/${editingItemId}`;
+  
+      const response = await fetch(apiEndpoint, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      if (response.ok) {
+        const updatedItems = items.map(item => (item.id === editingItemId ? formData : item));
+        setItems(updatedItems);
+        setIsFormVisible(false);
+      } else {
+        console.error("Error al actualizar el dato:", response.status);
+      }
     } catch (error) {
-      console.error("Error al actualizar el dato:", error);
+      console.error("Error al realizar la solicitud HTTP:", error);
     }
   };
+  
+  
+  // const initialFormData = editingItemId ? items.find(item => {
+  //   console.log('Item ID:', item.id);
+  //   console.log('Editing Item ID:', editingItemId);
+  //   return Number(item.id) === Number(editingItemId);
+  // }) : null;
+  
+  
   
 
   
@@ -183,6 +214,14 @@ const MantenimientoPage = () => {
 
     }
   };
+
+  useEffect(() => {
+    const foundItem = editingItemId
+      ? items.find(item => Number(item.id) === Number(editingItemId))
+      : null;
+    setInitialFormData(foundItem);
+  }, [items, editingItemId]);
+
   
   if (!hasMounted) {
     return <Loading/>; //<Loadig />
@@ -212,9 +251,9 @@ const MantenimientoPage = () => {
            <DynamicForm
             formProps={mantenimientoProps}
             onSubmit={handleCreateOrUpdate}
-            showCreateButton={handleCreateOrUpdate}// recibira el evento del boton crear del formulario
-            showUpdateButton=""// recibira el evento del boton crear del formulario
-            initialFormData=""// recibira el evento del cargar los datos al formulario cuando toque editar un dato
+            showCreateButton={!editingItemId}// recibira el evento del boton crear del formulario
+            showUpdateButton={editingItemId}// recibira el evento del boton crear del formulario
+            initialFormData={initialFormData}// recibira el evento del cargar los datos al formulario cuando toque editar un dato
             // @ts-ignore
             onUpdateClick={handleUpdateClick} // Pasa la función handleUpdateClick al DynamicForm
             columns={2}
