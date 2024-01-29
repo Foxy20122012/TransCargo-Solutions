@@ -27,7 +27,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "src/app/clientes/page.jsx", "src/components/appBar.jsx", "src/middleware.jsx", "src/app/nota/page.jsx", "src/app/pedidos/page.tsx"  ],
+, "src/app/clientes/page.jsx", "src/components/appBar.jsx", "src/middleware.jsx", "src/app/nota/page.jsx", "src/app/pedidos/page.jsx"  ],
   "exclude": [
     "node_modules"
   ]

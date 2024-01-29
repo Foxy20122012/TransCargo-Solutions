@@ -20,9 +20,15 @@ import fetchedHeaders from "../../models/pedidos/encabezadoPedidosModel"
 const DataTable = dynamic(() => import("vComponents/dist/DataTable"), { ssr: false });
 
 
-const columns = (Object.keys(pedidosColumns) as (keyof Pedidos)[]).map(
-  (key) => ({ key, label: pedidosColumns[key] })
-);
+
+const columns = Object.keys(pedidosColumns).map((key) => ({
+  key,
+  label: pedidosColumns[key]
+}));
+
+// const columns = (Object.keys(pedidosColumns) as (keyof Pedidos)[]).map(
+//   (key) => ({ key, label: pedidosColumns[key] })
+// );
 
 function PedidosPage() {
   const {
@@ -36,16 +42,16 @@ function PedidosPage() {
   } = usePedidos();
 
   const [headers, setHeaders] = useState([]); // Define tus cabeceras aquí
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
-  const [pedidosToDelete, setPedidosToDelete] = useState<Pedidos | null>(null);
-  const [isDeleteSuccess, setIsDeleteSuccess] = useState<boolean>(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [pedidosToDelete, setPedidosToDelete] = useState(null);
+  const [isDeleteSuccess, setIsDeleteSuccess] = useState(false);
   const [isFormVisible, setIsFormVisible] = useState(false);
 
   useEffect(() => {
     loadPedidos();
   }, []);
 
-  const openDeleteModal = (pedido: Pedidos) => {
+  const openDeleteModal = (pedido) => {
     setPedidosToDelete(pedido);
     setIsDeleteModalOpen(true);
   };
@@ -55,12 +61,12 @@ function PedidosPage() {
     setIsDeleteModalOpen(false);
   };
 
-  const handleEditPedidos = (pedido: Pedidos) => {
+  const handleEditPedidos = (pedido) => {
     setSelectedPedidos(pedido);
     setIsFormVisible(true);
   };
 
-  const handleDelete = (pedido: Pedidos) => {
+  const handleDelete = (pedido) => {
     openDeleteModal(pedido);
   };
 
@@ -69,7 +75,7 @@ function PedidosPage() {
     setIsFormVisible(true);
   };
 
-  const handleCreateOrUpdatePedidos = async (formData: any) => {
+  const handleCreateOrUpdatePedidos = async (formData) => {
     try {
       if (selectedPedidos) {
         // Estás editando un cliente existente
@@ -86,7 +92,7 @@ function PedidosPage() {
     }
   };
 
-  const handleUpdateClick = async (formData: any) => {
+  const handleUpdateClick = async (formData) => {
     try {
       if (selectedPedidos) {
         // Estás editando un cliente existente

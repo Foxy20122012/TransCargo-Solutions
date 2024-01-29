@@ -15,6 +15,7 @@ import { GiPayMoney,GiAbstract070 } from 'react-icons/gi'
 import { FiBox, FiArrowLeft, FiPocket  } from 'react-icons/fi'
 import { PiNotePencilFill, PiTruckDuotone  } from 'react-icons/pi'
 import { RiGasStationLine } from "react-icons/ri";
+import { MdBorderColor } from "react-icons/md";
 import { TbReportSearch } from "react-icons/tb";
 
 const Sidebar = () => {
@@ -68,8 +69,8 @@ const handleGasolinaClick = () => {
     },  
     {
       text: 'Pedidos',
-      link: '/Pedidos',
-      icon: <HiOutlineClipboardCheck className="m-3 text-xl font-bold" />,
+      link: '/pedidos',
+      icon: <MdBorderColor className="m-3 text-xl font-bold" />,
     },
     {
       text: 'Documentacion',
