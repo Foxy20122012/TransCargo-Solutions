@@ -6,7 +6,7 @@ import useLoading from "../../hooks/useLoading"
 // import useHasMounted from '../../hooks/useHasMounted'
 // import { useState, useEffect } from "react";
 import React, { useEffect, useState } from "react";
-import { Clientes } from "@prisma/client";
+// import { Clientes } from "@prisma/client";
 import presets from "../../utils/globalPresets"
 import fetchedHeaders from "../../models/encabezadoModel"
 // import useLoading from "../../hooks/useLoading"

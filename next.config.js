@@ -7,7 +7,7 @@ const nextConfig = {
     return [
       {
         source: '/mantenimientos',
-        destination: constants.publicPath,
+        destination: "/",
         permanent: false
       },
     ];

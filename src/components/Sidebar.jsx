@@ -67,31 +67,11 @@ const handleGasolinaClick = () => {
       icon: <BsFileEarmarkSpreadsheet className="m-3 text-xl font-bold" />,
     },
     {
-      text: 'Vehículos',
-      icon: <LuCar className="m-3 text-xl font-bold" />,
-      children: [
-        {
-          text: 'Transportes',
-          link: '/vehiculos',
-          icon: <PiTruckDuotone className="m-3 text-xl font-bold" />,
-        },
-        {
-          text: 'Mantenimientos',
-          link: '/mantenimientos',
-          icon: <GiPayMoney className="m-3 text-xl font-bold" />,
-        },
-      ],
+      text: 'Vehiculos',
+      link: '/vehiculos',
+      icon: <PiTruckDuotone className="m-3 text-xl font-bold" />,
     },
-    {
-      text: 'Gasolina',
-      link: '/gasolina',
-      icon: <RiGasStationLine className="m-3 text-xl font-bold" />,
-    },
-    {
-      text: 'Asignacion de Gas',
-      link: '/asiganacion',
-      icon: <TbReportSearch className="m-3 text-xl font-bold" />,
-    },
+
     {
       text: 'Documentacion',
       link: '/documentacion',

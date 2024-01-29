@@ -49,7 +49,7 @@ const MainLayout = () => {
               <AiOutlinePicRight className="text-2xl" />
             </Button>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              ERP
+              Trans Solutions
             </Typography>
             {/* Integra el componente UserMenu y pasa las props necesarias */}
             <Button color="inherit">
@@ -57,9 +57,9 @@ const MainLayout = () => {
               <UserMenu
               // @ts-ignore
                 userObj={{ 
-                  nombre_usuario: 'Transportes Perdomo', 
-                  compania: 'Eslogan', 
-                  email: 'transportesPerdono@transportesPerdomo.com' 
+                  nombre_usuario: 'Transportes Solution', 
+                  compania: 'Confiabilidad, Puntualidad, Compromiso', 
+                  email: 'transportesSolution@transportesSolution.com' 
                 }}
                 onClickProfile={handleProfileClick}
                 onClickLogout={handleLogoutClick}
