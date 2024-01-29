@@ -1,5 +1,5 @@
 import React from "react";
-import BtnAppBar from "../components/appBar";
+import BtnAppBar from "../../components/appBar";
 
 const Dashboard = () => {
   return (

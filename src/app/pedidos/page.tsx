@@ -1,8 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Pedidos } from "@prisma/client";
-import DataTable from "../../components/DataTable";
+// import DataTable from "../../components/DataTable";
+
 import dynamic from "next/dynamic";
+import presets from "../../utils/globalPresets"
 import { usePedidos } from "../../context/PedidosContext";
 import { pedidosColumns } from "../../models/pedidos/pedidosModel";
 import Modal from "../../components/Modals";
@@ -13,8 +15,10 @@ import pedidosProps from "../../models/pedidos/pedidosProps";
 import useHasMounted from "../../hooks/useHasMounted";
 import Loadig from "../../components/Loading";
 import BtnAppBar from "../../components/appBar";
+import fetchedHeaders from "../../models/pedidos/encabezadoPedidosModel"
 
-// const DataTable = dynamic(() => import("vComponents/dist/DataTable"), { ssr: false });
+const DataTable = dynamic(() => import("vComponents/dist/DataTable"), { ssr: false });
+
 
 const columns = (Object.keys(pedidosColumns) as (keyof Pedidos)[]).map(
   (key) => ({ key, label: pedidosColumns[key] })
@@ -31,6 +35,7 @@ function PedidosPage() {
     updatePedidos,
   } = usePedidos();
 
+  const [headers, setHeaders] = useState([]); // Define tus cabeceras aquí
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [pedidosToDelete, setPedidosToDelete] = useState<Pedidos | null>(null);
   const [isDeleteSuccess, setIsDeleteSuccess] = useState<boolean>(false);
@@ -95,6 +100,17 @@ function PedidosPage() {
     }
   };
 
+    // Lógica para obtener y configurar las cabeceras y elementos, por ejemplo, useEffect o llamadas a API...
+    useEffect(() => {
+
+    
+    
+      // Actualiza los estados con los datos obtenidos
+      setHeaders(fetchedHeaders);
+      // setItems(fetchedItems);
+    }, []); // Dependencias vacías para que se ejecute una vez al montar el componente
+
+    
   const rowsPedidos = transformPedidosToRows(pedidos);
 
   const hasMounted = useHasMounted();
@@ -103,10 +119,16 @@ function PedidosPage() {
   }
 
   return (
-    <div>
+    <div className="mt-16">
       <BtnAppBar />
       <div className="ml-10">
-        <DataTable
+      <DataTable headers={headers} items={rowsPedidos}  presets={presets} 
+       onNewItem={handleNewClick}
+       onEditItem={handleEditPedidos} 
+       onDeleteItem={handleDelete}
+       
+      />
+        {/* <DataTable
           title={"Pedidos"}
           // @ts-ignore
           data={rowsPedidos}
@@ -115,7 +137,7 @@ function PedidosPage() {
           // @ts-ignore
           onDelete={handleDelete}
           onNew={handleNewClick}
-        />
+        /> */}
         <Modal
           isOpen={isDeleteModalOpen}
           title="Confirmar Eliminación"

@@ -1,88 +1,84 @@
-"use client";
-import Colors from "../../app/themeApp/page";
+// Importaciones
+import React from "react";
 import BtnAppBar from "../../components/appBar";
-import router from "next/router";
+import Colors from "../../app/themeApp/page";
+import ModuleCard from "../../components/ModuleCard";  // Componente personalizado para representar visualmente cada módulo
+import { FaBriefcase, FaTasks } from "react-icons/fa";  // Iconos de FontAwesome
 
 export default function Documentacion() {
   return (
     <div>
       <BtnAppBar />
       <div className="mt-10">
-        <main className="flex flex-col items-center justify-between bg-gray-100 p-4 sm:p-8 md:p-16 lg:p-24 xl:p-32">
-          <h1 className="mb-3 text-center text-4xl font-bold text-blue-600 md:text-5xl">
-            Bienvenido al proyecto ChocoChapin ERP
+        <main className="flex flex-col items-center justify-between bg-gray-100 p-4 sm:p-8 md:p-16 lg:p-24 xl:p-32 rounded-md shadow-lg">
+
+          {/* Título principal */}
+          <h1 className="mb-5 text-center text-4xl font-bold text-blue-600 md:text-5xl">
+            ¡Bienvenido al proyecto Trans Solution ERP!
           </h1>
-          <p className="mb-5 text-base md:text-lg">
-            Este proyecto consta de varios módulos, a continuación se presenta
-            una descripción de cada uno y los encargados de su desarrollo:
+
+          {/* Descripción de la empresa */}
+          <p className="mb-8 text-lg text-center text-gray-700 md:text-xl">
+            Trans Solution es una empresa de logística de transporte dedicada a ofrecer soluciones eficientes y seguras.
           </p>
 
-          <div className="mb-5 flex flex-wrap justify-center">
-            <div
-              className="m-2 w-56 rounded-lg bg-blue-100 p-4 shadow-md md:w-64"
-              onClick={() => {
-                router.push("/borrar1");
-              }}
-            >
-              <h2 className="mb-1 text-lg font-semibold text-blue-600 md:text-xl">
-                Módulo 1: Gestión de inventario
-              </h2>
-              <p className="text-sm md:text-base">
-                Encargado: Mario Arita - <code>@dev_ja</code>
-              </p>
-            </div>
+          {/* Módulos */}
+          <div className="mb-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {/* Módulo 1 */}
+            <ModuleCard
+              name="Gestión de Inventarios"
+              description="Mantén un control eficiente de los inventarios."
+              icon={<FaBriefcase size={40} className="text-blue-500 mb-4 mx-auto" />}
+              bgColor="bg-blue-100"
+            />
 
-            <div className="m-2 w-56 rounded-lg bg-green-100 p-4 shadow-md md:w-64">
-              <h2 className="mb-1 text-lg font-semibold text-green-600 md:text-xl">
-                Módulo 2: Gestión de ventas
-              </h2>
-              <p className="text-sm md:text-base">
-                Encargado: Nery Lopez - <code>@dev_nl</code>
-              </p>
-            </div>
+            {/* Módulo 2 */}
+            <ModuleCard
+              name="Gestión de Ventas"
+              description="Gestiona y registra las ventas de la empresa."
+              icon={<FaBriefcase size={40} className="text-green-500 mb-4 mx-auto" />}
+              bgColor="bg-green-100"
+            />
 
-            <div className="m-2 w-56 rounded-lg bg-yellow-100 p-4 shadow-md md:w-64">
-              <h2 className="mb-1 text-lg font-semibold text-yellow-600 md:text-xl">
-                Módulo 3: Gestión de clientes
-              </h2>
-              <p className="text-sm md:text-base">
-                Encargado: Heidy Chu - <code>@dev_hc</code>
-              </p>
-            </div>
+            {/* Módulo 3 */}
+            <ModuleCard
+              name="Gestión de Clientes"
+              description="Administra la información y relaciones con los clientes."
+              icon={<FaBriefcase size={40} className="text-yellow-500 mb-4 mx-auto" />}
+              bgColor="bg-yellow-100"
+            />
 
-            <div className="m-2 w-56 rounded-lg bg-red-100 p-4 shadow-md md:w-64">
-              <h2 className="mb-1 text-lg font-semibold text-red-600 md:text-xl">
-                Módulo 4: Gestión financiera
-              </h2>
-              <p className="text-sm md:text-base">
-                Encargado: Miguel Alvarez - <code>@dev_ma</code>
-              </p>
-            </div>
+            {/* Módulo 4 */}
+            <ModuleCard
+              name="Gestión Financiera"
+              description="Opera las finanzas y asegura la salud financiera de la empresa."
+              icon={<FaBriefcase size={40} className="text-red-500 mb-4 mx-auto" />}
+              bgColor="bg-red-100"
+            />
 
-            <div className="m-2 w-56 rounded-lg bg-purple-100 p-4 shadow-md md:w-64">
-              <h2 className="mb-1 text-lg font-semibold text-purple-600 md:text-xl">
-                Módulo 5: Login y Seguridad
-              </h2>
-              <p className="text-sm md:text-base">
-                Encargado: Marvin Martinez - <code>@dev_mm</code>
-              </p>
-            </div>
+            {/* Módulo 5 */}
+            <ModuleCard
+              name="Login y Seguridad"
+              description="Maneja la autenticación y seguridad del sistema."
+              icon={<FaBriefcase size={40} className="text-purple-500 mb-4 mx-auto" />}
+              bgColor="bg-purple-100"
+            />
+
+            {/* Módulo de Pendientes */}
+            <ModuleCard
+              name="Módulo de Pendientes"
+              description="Gestiona y registra las tareas pendientes."
+              icon={<FaTasks size={40} className="text-indigo-500 mb-4 mx-auto" />}
+              bgColor="bg-indigo-100"
+            />
           </div>
 
-          <div>
+          {/* Paleta de Colores */}
+          <div className="mb-10">
             <p className="text-center text-sm font-bold md:text-base">
-              Para mantener un trabajo estético nos estaremos guiando por una
-              paleta de colores para procurar el mismo apartado visual en todos
-              los módulos.
+              Mantenemos un trabajo estético guiándonos por una paleta de colores.
             </p>
             <Colors />
-          </div>
-
-          <div className="mt-5 text-center md:mt-10">
-            <p className="text-blue-600">
-              Este es un proyecto orgullosamente guatemalteco para potenciar la
-              industria local.
-            </p>
           </div>
         </main>
       </div>

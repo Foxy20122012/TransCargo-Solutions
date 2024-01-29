@@ -43,7 +43,7 @@ const handleGasolinaClick = () => {
   const sidebarItems = [
     {
       text: 'dashboard',
-      link: '/',
+      link: '/Home',
       icon: <FiPocket className="m-3 text-xl font-bold" />,
     },
     {
@@ -65,17 +65,22 @@ const handleGasolinaClick = () => {
       text: 'Planilla',
       link: '/planilla',
       icon: <BsFileEarmarkSpreadsheet className="m-3 text-xl font-bold" />,
-    },
+    },  
     {
-      text: 'Vehiculos',
-      link: '/vehiculos',
-      icon: <PiTruckDuotone className="m-3 text-xl font-bold" />,
+      text: 'Pedidos',
+      link: '/Pedidos',
+      icon: <HiOutlineClipboardCheck className="m-3 text-xl font-bold" />,
     },
-
     {
       text: 'Documentacion',
       link: '/documentacion',
       icon: <HiOutlineClipboardCheck className="m-3 text-xl font-bold" />,
+    },
+  
+    {
+      text: 'Vehiculos',
+      link: '/vehiculos',
+      icon: <PiTruckDuotone className="m-3 text-xl font-bold" />,
     },
     {
       text: 'Cerrar Sesión',
