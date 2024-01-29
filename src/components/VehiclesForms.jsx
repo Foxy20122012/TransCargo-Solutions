@@ -1,7 +1,9 @@
+'use client'
 import React, { useState } from 'react';
 import { TextField, Button } from '@mui/material';
+import { useEffect } from 'react';
 
-const VehicleForm = ({ onSubmit }) => {
+const VehicleForm = ({ onSubmit, selectedVehicle }) => {
   const [newVehicle, setNewVehicle] = useState({
     Marca: '',
     Descripcion: '',
@@ -47,9 +49,16 @@ const VehicleForm = ({ onSubmit }) => {
     setImage(null);
   };
 
+  useEffect(() => {
+    // Si hay un vehículo seleccionado, inicializa el formulario con sus datos
+    if (selectedVehicle) {
+      setNewVehicle(selectedVehicle);
+    }
+  }, [selectedVehicle]);
+
   return (
-    <div>
-      <h2>Create New Vehicle</h2>
+    <div className="max-w-md mx-auto mt-8 p-4 bg-white rounded-md shadow-md">
+      <h2 className="text-2xl font-semibold mb-4">Create New Vehicle</h2>
       <form>
         <TextField
           label="Marca"
@@ -57,27 +66,32 @@ const VehicleForm = ({ onSubmit }) => {
           value={newVehicle.Marca}
           onChange={handleInputChange}
           fullWidth
+          className="mb-4"
         />
-         <TextField
+        <TextField
           label="Descripcion"
           name="Descripcion"
           value={newVehicle.Descripcion}
           onChange={handleInputChange}
           fullWidth
+          className="mb-4"
         />
-         <TextField
+        <TextField
           label="Modelo"
           name="Modelo"
           value={newVehicle.Modelo}
           onChange={handleInputChange}
           fullWidth
+          className="mb-4"
         />
-     <TextField
+        <TextField
           label="CapacidadCarga"
           name="CapacidadCarga"
           value={newVehicle.CapacidadCarga}
           onChange={handleInputChange}
           fullWidth
+          className="mb-4"
+          type='number'
         />
         <TextField
           label="TipoCombustible"
@@ -85,21 +99,24 @@ const VehicleForm = ({ onSubmit }) => {
           value={newVehicle.TipoCombustible}
           onChange={handleInputChange}
           fullWidth
+          className="mb-4"
         />
-       <TextField
+        <TextField
           label="EstadoVehiculo"
           name="EstadoVehiculo"
           value={newVehicle.EstadoVehiculo}
           onChange={handleInputChange}
           fullWidth
+          className="mb-4"
         />
-               <TextField
+        <TextField
           label="AnioFabricacion"
           name="AnioFabricacion"
           value={newVehicle.AnioFabricacion}
           onChange={handleInputChange}
           fullWidth
-          type='number'
+          type="number"
+          className="mb-4"
         />
         <TextField
           label="Placa"
@@ -107,10 +124,11 @@ const VehicleForm = ({ onSubmit }) => {
           value={newVehicle.Placa}
           onChange={handleInputChange}
           fullWidth
+          className="mb-4"
         />
-        {/* Resto de los campos de entrada aquí */}
-        <input type="file" name="imagen" onChange={handleImageChange} />
-        <Button variant="contained" color="primary" onClick={handleSubmit}>
+        <input type="file" name="imagen" onChange={handleImageChange} className="mb-4" />
+
+        <Button variant="contained" color="primary" onClick={handleSubmit} fullWidth>
           Create Vehicle
         </Button>
       </form>

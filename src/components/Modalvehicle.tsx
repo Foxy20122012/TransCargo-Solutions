@@ -1,30 +1,43 @@
 import React, { FC } from "react";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface ModalProps {
   isOpen: boolean;
   title: string;
   onConfirm: () => void;
   onCancel: () => void;
-  onUpdate: () => void;
   showCancelButton?: boolean;
   showConfirmButton?: boolean;
-  showUpdateButton?: boolean;
   message: string;
 }
 
-const Modals: FC<ModalProps> = ({
+const Modalsvehicles: FC<ModalProps> = ({
   isOpen,
   title,
   onConfirm,
   onCancel,
-  onUpdate,
   showCancelButton = true,
   showConfirmButton = true,
-  showUpdateButton = true,
   // @ts-ignore
   children,
 }) => {
   if (!isOpen) return null;
+
+  const handleConfirm = () => {
+    onCancel(); // Cierra el modal antes de ejecutar onConfirm
+    onConfirm();
+
+      // Muestra el toast después de cerrar el modal y confirmar la eliminación
+      toast.success("Registro eliminado correctamente", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+      });
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -41,18 +54,10 @@ const Modals: FC<ModalProps> = ({
               Cancelar
             </button>
           )}
-          {showUpdateButton && (
-            <button
-              className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
-              onClick={onUpdate}
-            >
-              Actualizar
-            </button>
-          )}
           {showConfirmButton && (
             <button
               className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md"
-              onClick={onConfirm}
+              onClick={handleConfirm} 
             >
               Confirmar
             </button>
@@ -63,4 +68,4 @@ const Modals: FC<ModalProps> = ({
   );
 };
 
-export default Modals;
+export default Modalsvehicles;

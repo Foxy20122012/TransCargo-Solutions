@@ -66,11 +66,16 @@ model Note {
 
 model Pedidos {
   id              Int       @id @default(autoincrement())
-  cliente_id      Int?
   fecha_pedido    DateTime? @db.Date
   fecha_entrega   DateTime? @db.Date
   estado_pedido   String?   @db.VarChar(50)
   detalles_pedido String?   @db.Text
+  cliente_id      String?   @db.VarChar(255)
+  codigo_pedido   String?   @db.VarChar(255)
+  tipo_pago       String?   @db.VarChar(50)
+  direccion_envio String?   @db.Text
+  notas           String?   @db.Text
+  codigo_venta    String?   @db.VarChar(255)
 }
 
 model ProductosTerminados {
@@ -178,4 +183,13 @@ model MateriasPrimas {
   valor_viaje       String? @db.VarChar(255)
   ganancia_viaje    String? @db.VarChar(255)
   numero_de_factura String? @db.VarChar(255)
+}
+
+model MantenimientoVehiculos {
+  ID                       Int       @id
+  UnidadAsignada           Int?
+  TipoMantenimiento        String?   @db.VarChar(255)
+  DescripcionMantenimiento String?   @db.Text
+  FechaMantenimiento       DateTime? @db.Date
+  CostoMantenimiento       Decimal?  @db.Decimal(10, 2)
 }
